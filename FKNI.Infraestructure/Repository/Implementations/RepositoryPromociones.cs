@@ -21,16 +21,18 @@ namespace FKNI.Infraestructure.Repository.Implementations
         {
             //Obtener un Libro con su autor y las lista de categorías
             var @object = await _context.Set<Promociones>()
-                                .Where(x => x.IdProducto == id_promocion)
+                                .Where(x => x.IdPromocion == id_promocion)
                                 .Include(x => x.IdProductoNavigation)
+                                .Include(x => x.IdCategoriaNavigation)
                                 .FirstAsync();
-            return @object!;
+                return @object;
         }
         public async Task<ICollection<Promociones>> ListAsync()
         {
             //Listar los libros incluyendo su autor, ordenado de forma descendente
             var collection = await _context.Set<Promociones>()
                                 .Include(x => x.IdProductoNavigation)
+                                .Include(x => x.IdCategoriaNavigation)
                                 .OrderBy(x => x.IdPromocion)
                                 .ToListAsync();
             return collection;

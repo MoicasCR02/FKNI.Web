@@ -19,5 +19,7 @@ public partial class Promociones
 
     public DateOnly? FechaFin { get; set; }
 
+    public virtual Categorias? IdCategoriaNavigation { get; set; }
+
     public virtual Productos? IdProductoNavigation { get; set; }
 }

@@ -7,11 +7,9 @@ using System.Threading.Tasks;
 
 namespace FKNI.Infraestructure.Repository.Interfaces
 {
-    public interface IRepositoryResenas
+    public interface IRepositoryPedidos
     {
-        Task<ICollection<Resenas>> ListAsync();
-        Task<Resenas> FindByIdAsync(int id_usuario, int id_producto);
+        Task<ICollection<Pedidos>> ListAsync();
+        Task<Pedidos> FindByIdAsync(int id_pedido);
     }
 }
-
-

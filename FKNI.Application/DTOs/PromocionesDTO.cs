@@ -23,6 +23,8 @@ namespace FKNI.Application.DTOs
 
         public DateOnly? FechaFin { get; set; }
 
+        public virtual Categorias? IdCategoriaNavigation { get; set; }
+
         public virtual Productos? IdProductoNavigation { get; set; }
     }
 }

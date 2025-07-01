@@ -1,0 +1,71 @@
+﻿@model IEnumerable<FKNI.Application.DTOs.PromocionesDTO>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.IdPromocion)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TipoPromocion)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IdProductoNavigation.NombreProducto)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IdCategoriaNavigation.NombreCategoria)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Descuento)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FechaInicio)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FechaFin)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.IdPromocion)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TipoPromocion)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IdProductoNavigation.NombreProducto)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IdCategoriaNavigation.NombreCategoria)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Descuento)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FechaInicio)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FechaFin)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
+                @Html.ActionLink("Details", "Details", new {  id=item.IdPromocion }) |
+                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
