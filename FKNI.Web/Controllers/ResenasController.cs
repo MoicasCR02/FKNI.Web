@@ -1,30 +1,32 @@
-﻿using FKNI.Application.Services.Interfaces;
+﻿using FKNI.Application.Services.Implementations;
+using FKNI.Application.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FKNI.Web.Controllers
 {
-    public class ProductosController : Controller
+    public class ResenasController : Controller
     {
-        private readonly IServiceProductos _serviceProductos;
-        public ProductosController(IServiceProductos serviceProductos)
+        private readonly IServiceResenas _serviceResenas;
+        public ResenasController(IServiceResenas serviceResenas)
         {
-            _serviceProductos = serviceProductos;
+            _serviceResenas = serviceResenas;
         }
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-            var collection = await _serviceProductos.ListAsync();
+            var collection = await _serviceResenas.ListAsync();
             return View(collection);
         }
-        public async Task<ActionResult> Details(int? id)
+
+        public async Task<ActionResult> Details(int? id_usuario, int? id_producto)
         {
             try
             {
-                if (id == null)
+                if (id_usuario == null && id_producto == null)
                 {
                     return RedirectToAction("IndexAdmin");
                 }
-                var @object = await _serviceProductos.FindByIdAsync(id.Value);
+                var @object = await _serviceResenas.FindByIdAsync(id_usuario.Value,id_producto.Value);
                 if (@object == null)
                 {
                     throw new Exception("Producto no existente");

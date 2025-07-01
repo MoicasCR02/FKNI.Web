@@ -22,17 +22,25 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddTransient<IRepositoryUsuarios, RepositoryUsuarios>();
 builder.Services.AddTransient<IRepositoryProductos, RepositoryProductos>();
 builder.Services.AddTransient<IRepositoryCategorias, RepositoryCategorias>();
-
+builder.Services.AddTransient<IRepositoryImagenes, RepositoryImagenes>();
+builder.Services.AddTransient<IRepositoryEtiquetas, RepositoryEtiquetas>();
+builder.Services.AddTransient<IRepositoryResenas, RepositoryResenas>();
 //Services
 builder.Services.AddTransient<IServiceUsuarios, ServiceUsuarios>();
 builder.Services.AddTransient<IServiceProductos, ServiceProductos>();
 builder.Services.AddTransient<IServiceCategorias, ServiceCategorias>();
+builder.Services.AddTransient<IServiceImagenes, ServiceImagenes>();
+builder.Services.AddTransient<IServiceEtiquetas, ServiceEtiquetas>();
+builder.Services.AddTransient<IServiceResenas, ServiceResenas>();
 //Configurar Automapper
 builder.Services.AddAutoMapper(config =>
 {
     config.AddProfile<UsuariosProfile>();
     config.AddProfile<ProductosProfile>();
     config.AddProfile<CategoriasProfile>();
+    config.AddProfile<ImagenesProfile>();
+    config.AddProfile<EtiquetasProfile>();
+    config.AddProfile<ResenasProfile>();
 });
 // Configuar Conexión a la Base de Datos SQL
 builder.Services.AddDbContext<FKNIContext>(options =>

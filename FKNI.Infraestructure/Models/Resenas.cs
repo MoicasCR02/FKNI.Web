@@ -5,11 +5,9 @@ namespace FKNI.Infraestructure.Models;
 
 public partial class Resenas
 {
-    public int IdResena { get; set; }
+    public int IdUsuario { get; set; }
 
-    public int? IdUsuario { get; set; }
-
-    public int? IdProducto { get; set; }
+    public int IdProducto { get; set; }
 
     public DateTime? Fecha { get; set; }
 
@@ -19,7 +17,7 @@ public partial class Resenas
 
     public bool? Estado { get; set; }
 
-    public virtual Productos? IdProductoNavigation { get; set; }
+    public virtual Productos IdProductoNavigation { get; set; } = null!;
 
-    public virtual Usuarios? IdUsuarioNavigation { get; set; }
+    public virtual Usuarios IdUsuarioNavigation { get; set; } = null!;
 }

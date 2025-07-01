@@ -17,15 +17,26 @@ namespace FKNI.Infraestructure.Repository.Implementations
         {
             _context = context;
         }
-        public Task<Productos> FindByIdAsync(int id_producto)
+        public async Task<Productos> FindByIdAsync(int id_producto)
         {
-            throw new NotImplementedException();
+            //Obtener un Libro con su autor y las lista de categorías
+            var @object = await _context.Set<Productos>()
+                                .Where(x => x.IdProducto == id_producto)
+                                .Include(x => x.IdCategoriaNavigation)
+                                .Include(x => x.IdImagen)
+                                .Include(x => x.IdEtiqueta)
+                                .Include(x => x.Resenas).ThenInclude(r => r.IdUsuarioNavigation)
+                                .FirstAsync();
+            return @object!;
         }
         public async Task<ICollection<Productos>> ListAsync()
         {
             //Listar los libros incluyendo su autor, ordenado de forma descendente
             var collection = await _context.Set<Productos>()
                                 .Include(x => x.IdCategoriaNavigation)
+                                .Include(x => x.IdImagen)
+                                .Include(x => x.IdEtiqueta)
+                                .Include(x => x.Resenas).ThenInclude(r => r.IdUsuarioNavigation)
                                 .OrderByDescending(x => x.IdCategoria)
                                 .ToListAsync();
             return collection;

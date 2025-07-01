@@ -9,12 +9,10 @@
 <p>
     <a asp-action="Create">Create New</a>
 </p>
+
 <table class="table">
     <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.IdProducto)
-            </th>
+        <tr> 
             <th>
                 @Html.DisplayNameFor(model => model.NombreProducto)
             </th>
@@ -25,16 +23,7 @@
                 @Html.DisplayNameFor(model => model.Precio)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Stock)
-            </th>
-            <th>
                 @Html.DisplayNameFor(model => model.PromedioValoracion)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.IdCategoriaNavigation.NombreCategoria)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Estado)
             </th>
             <th></th>
         </tr>
@@ -42,9 +31,6 @@
     <tbody>
 @foreach (var item in Model) {
         <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.IdProducto)
-            </td>
             <td>
                 @Html.DisplayFor(modelItem => item.NombreProducto)
             </td>
@@ -55,21 +41,31 @@
                 @Html.DisplayFor(modelItem => item.Precio)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Stock)
-            </td>
-            <td>
                 @Html.DisplayFor(modelItem => item.PromedioValoracion)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.IdCategoriaNavigation.NombreCategoria)
+                @foreach (var c in item.IdImagen)
+                {
+                    <img class="card-img-top"
+                         style="max-height:460px;"
+                         role="img"
+                         src="data:image/jpeg;charset=utf-8;base64,@Convert.ToBase64String(c.UrlImagen)"
+                         alt="Imagen" />
+                }
             </td>
+                
             <td>
-                @Html.DisplayFor(modelItem => item.Estado)
-            </td>
-            <td>
+
+             
                 @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+                    @Html.ActionLink("Details", "Details", new { id = item.IdProducto}) |
                 @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+@*                     <div class="card-body">
+                        <a class="btn btn-primary" asp-action="Details"
+                           asp-route-id="@item.IdProducto"
+                           class="btn btn-info">Detalle</a>
+
+                    </div> *@
             </td>
         </tr>
 }

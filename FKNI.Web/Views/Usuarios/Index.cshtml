@@ -13,25 +13,25 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.id_usuario)
+                @Html.DisplayNameFor(model => model.IdUsuario)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.nombre_usuario)
+                @Html.DisplayNameFor(model => model.NombreUsuario)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.correo)
+                @Html.DisplayNameFor(model => model.Correo)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.contrasena)
+                @Html.DisplayNameFor(model => model.Contrasena)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.fecha_registro)
+                @Html.DisplayNameFor(model => model.FechaRegistro)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.telefono)
+                @Html.DisplayNameFor(model => model.Telefono)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.id_rol)
+                @Html.DisplayNameFor(model => model.IdRolNavigation.NombreRol)
             </th>
             <th></th>
         </tr>
@@ -40,25 +40,25 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.id_usuario)
+                @Html.DisplayFor(modelItem => item.IdUsuario)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.nombre_usuario)
+                @Html.DisplayFor(modelItem => item.NombreUsuario)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.correo)
+                @Html.DisplayFor(modelItem => item.Correo)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.contrasena)
+                @Html.DisplayFor(modelItem => item.Contrasena)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.fecha_registro)
+                @Html.DisplayFor(modelItem => item.FechaRegistro)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.telefono)
+                @Html.DisplayFor(modelItem => item.Telefono)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.id_rol)
+                @Html.DisplayFor(modelItem => item.IdRolNavigation.NombreRol)
             </td>
             <td>
                 @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |

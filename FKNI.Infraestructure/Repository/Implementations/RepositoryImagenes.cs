@@ -10,22 +10,25 @@ using System.Threading.Tasks;
 
 namespace FKNI.Infraestructure.Repository.Implementations
 {
-    public class RepositoryUsuarios : IRepositoryUsuarios
+    public class RepositoryImagenes : IRepositoryImagenes
     {
         private readonly FKNIContext _context;
-        public RepositoryUsuarios(FKNIContext context)
+        //Alt+Enter
+        public RepositoryImagenes(FKNIContext context)
         {
             _context = context;
         }
-        public async Task<Usuarios> FindByIdAsync(int IdUsuario)
+
+        public async Task<Imagenes> FindByIdAsync(int id)
         {
-            var @object = await _context.Set<Usuarios>().FindAsync(IdUsuario);
+            var @object = await _context.Set<Imagenes>().FindAsync(id);
 
             return @object!;
         }
-        public async Task<ICollection<Usuarios>> ListAsync()
+
+        public async Task<ICollection<Imagenes>> ListAsync()
         {
-            var collection = await _context.Set<Usuarios>().AsNoTracking().ToListAsync();
+            var collection = await _context.Set<Imagenes>().AsNoTracking().ToListAsync();
             return collection;
         }
     }

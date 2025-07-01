@@ -18,4 +18,6 @@ public partial class Promociones
     public DateOnly? FechaInicio { get; set; }
 
     public DateOnly? FechaFin { get; set; }
+
+    public virtual Productos? IdProductoNavigation { get; set; }
 }
