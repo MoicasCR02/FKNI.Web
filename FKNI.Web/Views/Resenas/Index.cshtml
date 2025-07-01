@@ -1,59 +1,75 @@
 ﻿@model IEnumerable<FKNI.Application.DTOs.ResenasDTO>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Reseñas";
 }
 
-<h1>Index</h1>
+<div class="container my-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="text-primary">Lista de Reseñas</h2>
+        <a asp-action="Create" class="btn btn-success">
+            <i class="fas fa-plus-circle"></i> Agregar nueva reseña
+        </a>
+    </div>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.IdUsuarioNavigation.NombreUsuario)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.IdProductoNavigation.NombreProducto)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Fecha)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Comentario)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Valoracion)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.IdUsuarioNavigation.NombreUsuario)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.IdProductoNavigation.NombreProducto)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Fecha)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Comentario)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Valoracion)
-            </td>
-            <td>
-                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Details", "Details", new { id_usuario=item.IdUsuario, id_producto=item.IdProducto}) |
-                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover table-striped shadow rounded">
+            <thead class="table-dark">
+                <tr>
+                    <th>Usuario</th>
+                    <th>Producto</th>
+                    <th>Fecha</th>
+                    <th>Comentario</th>
+                    <th>Valoración</th>
+                    <th class="text-center">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@item.IdUsuarioNavigation?.NombreUsuario</td>
+                        <td>@item.IdProductoNavigation?.NombreProducto</td>
+                        <td>@item.Fecha</td>
+                        <td>@item.Comentario</td>
+                        <td>
+                            @if (item.Valoracion.HasValue)
+                            {
+                                var valor = item.Valoracion.Value; // Use .Value to access the nullable decimal
+                                var fullStars = (int)Math.Floor((double)valor); // Explicitly cast 'valor' to double
+                                var halfStar = (valor - fullStars) >= 0.5m; // Ensure decimal literal with 'm'
+                                var emptyStars = 5 - fullStars - (halfStar ? 1 : 0);
+
+                                @for (int i = 0; i < fullStars; i++)
+                                {
+                                    <i class="fas fa-star text-warning"></i>
+                                }
+                                @if (halfStar)
+                                {
+                                    <i class="fas fa-star-half-alt text-warning"></i>
+                                }
+                                @for (int i = 0; i < emptyStars; i++)
+                                {
+                                    <i class="far fa-star text-warning"></i>
+                                }
+                            }
+                        </td>
+                        <td class="text-center">
+                            <div class="d-flex justify-content-center gap-2">
+                                <a asp-action="Edit" asp-route-id_usuario="@item.IdUsuario" asp-route-id_producto="@item.IdProducto" class="btn btn-sm btn-outline-primary" title="Editar">
+                                    <i class="fas fa-pen"></i>
+                                </a>
+                                <a asp-action="Details" asp-route-id_usuario="@item.IdUsuario" asp-route-id_producto="@item.IdProducto" class="btn btn-sm btn-outline-info" title="Detalles">
+                                    <i class="fas fa-eye"></i>
+                                </a>
+                                <a asp-action="Delete" asp-route-id_usuario="@item.IdUsuario" asp-route-id_producto="@item.IdProducto" class="btn btn-sm btn-outline-danger" title="Eliminar">
+                                    <i class="fas fa-trash-alt"></i>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
