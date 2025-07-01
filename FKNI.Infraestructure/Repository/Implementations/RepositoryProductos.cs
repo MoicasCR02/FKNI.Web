@@ -25,6 +25,7 @@ namespace FKNI.Infraestructure.Repository.Implementations
                                 .Include(x => x.IdCategoriaNavigation)
                                 .Include(x => x.IdImagen)
                                 .Include(x => x.IdEtiqueta)
+                                .Include(x => x.DetallePedidoProducto)
                                 .Include(x => x.Resenas).ThenInclude(r => r.IdUsuarioNavigation)
                                 .FirstAsync();
             return @object!;
@@ -36,6 +37,7 @@ namespace FKNI.Infraestructure.Repository.Implementations
                                 .Include(x => x.IdCategoriaNavigation)
                                 .Include(x => x.IdImagen)
                                 .Include(x => x.IdEtiqueta)
+                                .Include(x => x.DetallePedidoProducto)
                                 .Include(x => x.Resenas).ThenInclude(r => r.IdUsuarioNavigation)
                                 .OrderByDescending(x => x.IdCategoria)
                                 .ToListAsync();

@@ -26,6 +26,7 @@ builder.Services.AddTransient<IRepositoryImagenes, RepositoryImagenes>();
 builder.Services.AddTransient<IRepositoryEtiquetas, RepositoryEtiquetas>();
 builder.Services.AddTransient<IRepositoryResenas, RepositoryResenas>();
 builder.Services.AddTransient<IRepositoryPromociones, RepositoryPromociones>();
+builder.Services.AddTransient<IRepositoryPedidos, RepositoryPedidos>();
 //Services
 builder.Services.AddTransient<IServiceUsuarios, ServiceUsuarios>();
 builder.Services.AddTransient<IServiceProductos, ServiceProductos>();
@@ -34,6 +35,7 @@ builder.Services.AddTransient<IServiceImagenes, ServiceImagenes>();
 builder.Services.AddTransient<IServiceEtiquetas, ServiceEtiquetas>();
 builder.Services.AddTransient<IServiceResenas, ServiceResenas>();
 builder.Services.AddTransient<IServicePromociones, ServicePromociones>();
+builder.Services.AddTransient<IServicePedidos, ServicePedidos>();
 //Configurar Automapper
 builder.Services.AddAutoMapper(config =>
 {
@@ -44,6 +46,7 @@ builder.Services.AddAutoMapper(config =>
     config.AddProfile<EtiquetasProfile>();
     config.AddProfile<ResenasProfile>();
     config.AddProfile<PromocionesProfile>();
+    config.AddProfile<PedidosProfile>();
 });
 // Configuar Conexión a la Base de Datos SQL
 builder.Services.AddDbContext<FKNIContext>(options =>
