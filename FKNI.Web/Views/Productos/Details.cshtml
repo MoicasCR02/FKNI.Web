@@ -1,119 +1,92 @@
 ﻿@model FKNI.Application.DTOs.ProductosDTO
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Detalles del Producto";
 }
 
-<h1>Details</h1>
+<div class="container my-5">
+    <h2 class="text-primary mb-4">Detalles del Producto</h2>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.IdProducto)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.NombreProducto)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Descripcion)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Precio)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Stock)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.PromedioValoracion)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.IdCategoria)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Estado)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => Model.IdProducto)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => Model.NombreProducto)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => Model.Descripcion)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => Model.Precio)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => Model.Stock)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => Model.PromedioValoracion)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => Model.IdCategoriaNavigation.NombreCategoria)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => Model.Estado)
-            </td>
-            <h4>Categoria</h4>
-            <hr />
-            <dl class="row">
-                <dd class="col-sm-10">
-                    @Html.DisplayFor(model => model.IdCategoriaNavigation.NombreCategoria)
-                </dd>
+    <!-- Información principal del producto -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <h4 class="card-title">@Model.NombreProducto</h4>
+            <p class="text-muted">@Model.Descripcion</p>
+
+            <dl class="row mt-3">
+                <dt class="col-sm-4">ID del Producto</dt>
+                <dd class="col-sm-8">@Model.IdProducto</dd>
+
+                <dt class="col-sm-4">Precio</dt>
+                <dd class="col-sm-8">$@Model.Precio</dd>
+
+                <dt class="col-sm-4">Stock</dt>
+                <dd class="col-sm-8">@Model.Stock unidades</dd>
+
+                <dt class="col-sm-4">Valoración Promedio</dt>
+                <dd class="col-sm-8">@Model.PromedioValoracion ★</dd>
+
+                <dt class="col-sm-4">Categoría</dt>
+                <dd class="col-sm-8">@Model.IdCategoriaNavigation?.NombreCategoria</dd>
+
+                <dt class="col-sm-4">Estado</dt>
+                <dd class="col-sm-8">@Model.Estado</dd>
             </dl>
-            <div>
-                <ul>
-                    @foreach (var c in Model.IdImagen)
-                    {
-                        <img class="card-img-top"
-                             style="max-width:460px;"
-                             role="img"
-                             src="data:image/jpeg;base64,@Convert.ToBase64String(c.UrlImagen)"
-                             alt="Imagen" />
-                    }
-                </ul>
-            </div>
-        </tr>
-        <h4>Etiquetas</h4>
-        <div>
-            <ul>
-                @foreach (var c in Model.IdEtiqueta)
+        </div>
+    </div>
+
+    <!-- Imágenes del producto -->
+    @if (Model.IdImagen != null && Model.IdImagen.Any())
+    {
+        <div class="mb-4">
+            <h5>Imágenes</h5>
+            <div class="d-flex flex-wrap gap-3">
+                @foreach (var img in Model.IdImagen)
                 {
-                    <li>@c.NombreEtiqueta</li>
+                    <img src="data:image/jpeg;base64,@Convert.ToBase64String(img.UrlImagen)"
+                         alt="Imagen del producto"
+                         class="img-thumbnail"
+                         style="max-width: 300px;" />
+                }
+            </div>
+        </div>
+    }
+
+    <!-- Etiquetas -->
+    @if (Model.IdEtiqueta != null && Model.IdEtiqueta.Any())
+    {
+        <div class="mb-4">
+            <h5>Etiquetas</h5>
+            <ul class="list-inline">
+                @foreach (var tag in Model.IdEtiqueta)
+                {
+                    <li class="list-inline-item badge bg-secondary">@tag.NombreEtiqueta</li>
                 }
             </ul>
         </div>
-        <h4>Reseñas</h4>
-        <div>
-            <td>
-                @foreach (var c in Model.Resenas)
-                {
-                    <h1>Usuario</h1>
-                    <li>@c.IdUsuarioNavigation.NombreUsuario</li>
-                    <h1>Comentario</h1>
-                    <li>@c.Comentario</li>
-                    <h1>Fecha</h1>
-                    <li>@c.Fecha</li>
-                    <h1>Valoracion</h1>
-                    <li>@c.Valoracion</li>
-                }
-            </td>
-        </div>
+    }
 
-        <a asp-action="Index" class="btn btn-info">
-            <i class="bi bi-arrow-return-left"></i>
-            Regresar al listado
+    <!-- Reseñas -->
+    @if (Model.Resenas != null && Model.Resenas.Any())
+    {
+        <div class="mb-4">
+            <h5>Reseñas</h5>
+            @foreach (var review in Model.Resenas)
+            {
+                <div class="border rounded p-3 mb-3 bg-light">
+                    <p><strong>Usuario:</strong> @review.IdUsuarioNavigation?.NombreUsuario</p>
+                    <p><strong>Comentario:</strong> @review.Comentario</p>
+                    <p><strong>Fecha:</strong> @review.Fecha</p>
+                    <p><strong>Valoración:</strong> @review.Valoracion ★</p>
+                </div>
+            }
+        </div>
+    }
+
+    <!-- Botón volver -->
+    <div class="mt-4">
+        <a asp-action="Index" class="btn btn-outline-secondary">
+            <i class="fas fa-arrow-left"></i> Volver al listado
         </a>
-    </tbody>
-</table>
+    </div>
+</div>
