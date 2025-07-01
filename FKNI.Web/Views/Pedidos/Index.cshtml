@@ -31,7 +31,7 @@
                         <td>@item.IdPedido</td>
                         <td>@item.IdClienteNavigation?.NombreUsuario</td>
                         <td>@item.MetodoEntrega</td>
-                        <td>@item.FechaPedido</td>
+                        <td>@item.FechaPedido?.ToShortDateString()</td>
                         <td>@item.IdEstado</td>
                         <td class="text-center">
                             <div class="d-flex justify-content-center gap-2">

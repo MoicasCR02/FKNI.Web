@@ -14,7 +14,7 @@
                 <dd class="col-sm-8">@Model.IdPedido</dd>  
 
                 <dt class="col-sm-4">Fecha del Pedido</dt>  
-                <dd class="col-sm-8">@Model.FechaPedido</dd>  
+                <dd class="col-sm-8">@Model.FechaPedido?.ToShortDateString()</dd>
 
                 <dt class="col-sm-4">Método de Entrega</dt>  
                 <dd class="col-sm-8">@Model.MetodoEntrega</dd>  
