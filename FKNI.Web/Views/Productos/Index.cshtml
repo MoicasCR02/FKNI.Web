@@ -35,7 +35,11 @@
                         <h5 class="card-title">@item.NombreProducto</h5>
                         <p class="card-text text-muted">@item.Descripcion</p>
                         <p class="mb-1"><strong>Precio:</strong> $@item.Precio</p>
-
+                        <p class="mb-1"><strong>Descuento:</strong> $@item.Descuento</p>
+                        <p class="mb-1">
+                            <strong>Total con Descuento:</strong>
+                            $@((item.Precio - (item.Precio * (item.Descuento / 100))).ToString("0.00"))
+                        </p>
                         <div class="mb-3">
                             <strong>Valoración:</strong>
                             @{

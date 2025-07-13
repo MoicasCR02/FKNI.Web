@@ -32,7 +32,6 @@ namespace FKNI.Infraestructure.Repository.Implementations
         }
         public async Task<ICollection<Productos>> ListAsync()
         {
-            //Listar los libros incluyendo su autor, ordenado de forma descendente
             var collection = await _context.Set<Productos>()
                                 .Include(x => x.IdCategoriaNavigation)
                                 .Include(x => x.IdImagen)
@@ -41,6 +40,17 @@ namespace FKNI.Infraestructure.Repository.Implementations
                                 .Include(x => x.Resenas).ThenInclude(r => r.IdUsuarioNavigation)
                                 .OrderByDescending(x => x.IdCategoria)
                                 .ToListAsync();
+            var hoy = DateTime.Today;
+            var promociones = await _context.Set<Promociones>().ToListAsync();
+            var promocionesVigentes = promociones.Where(p => p.FechaInicio <= hoy && p.FechaFin >= hoy).ToList();
+            foreach (var producto in collection)
+            {
+                var promo = promocionesVigentes.FirstOrDefault(pr => pr.IdProducto == producto.IdProducto)
+                         ?? promocionesVigentes.FirstOrDefault(pr => pr.IdCategoria == producto.IdCategoria);
+
+                producto.Descuento = promo?.Descuento ?? 0;
+            }
+
             return collection;
         }
     }

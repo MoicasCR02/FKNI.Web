@@ -23,6 +23,7 @@
                     <th>Descuento (%)</th>
                     <th>Inicio</th>
                     <th>Fin</th>
+                    <th>Estado</th>
                     <th class="text-center">Acciones</th>
                 </tr>
             </thead>
@@ -37,6 +38,30 @@
                         <td>@item.Descuento %</td>
                         <td>@item.FechaInicio</td>
                         <td>@item.FechaFin</td>
+                        @{
+                            var hoy = DateTime.Today;
+                            string colorFondo;
+
+                            if (item.FechaInicio <= hoy && item.FechaFin >= hoy)
+                            {
+                                // Vigente
+                                colorFondo = "#60FCBC"; // Rojo vibrante
+                            }
+                            else if (item.FechaFin < hoy)
+                            {
+                                // Aplicado (vencida)
+                                colorFondo = "#FF4545"; // Gris suave
+                            }
+                            else
+                            {
+                                // Pendiente (futura)
+                                colorFondo = "#BCCEFF"; // Azul claro
+                            }
+                        }
+
+                        <td style="background-color:@colorFondo">
+                            @item.FechaFin
+                        </td>
                         <td class="text-center">
                             <div class="d-flex justify-content-center gap-2">
                                 <a asp-action="Edit" asp-route-id="@item.IdPromocion" class="btn btn-outline-primary btn-sm" title="Editar">

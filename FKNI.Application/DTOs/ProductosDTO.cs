@@ -1,6 +1,7 @@
 ﻿using FKNI.Infraestructure.Models;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -36,6 +37,9 @@ namespace FKNI.Application.DTOs
         public virtual ICollection<Etiquetas> IdEtiqueta { get; set; } = new List<Etiquetas>();
 
         public virtual ICollection<Imagenes> IdImagen { get; set; } = new List<Imagenes>();
+
+        [NotMapped]
+        public decimal Descuento { get; set; } = 0;
 
     }
 }

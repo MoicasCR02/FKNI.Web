@@ -15,9 +15,9 @@ public partial class Promociones
 
     public decimal Descuento { get; set; }
 
-    public DateOnly? FechaInicio { get; set; }
+    public DateTime? FechaInicio { get; set; }
 
-    public DateOnly? FechaFin { get; set; }
+    public DateTime? FechaFin { get; set; }
 
     public virtual Categorias? IdCategoriaNavigation { get; set; }
 
