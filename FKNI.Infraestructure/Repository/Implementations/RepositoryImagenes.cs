@@ -32,12 +32,30 @@ namespace FKNI.Infraestructure.Repository.Implementations
             return collection;
         }
 
+        public async Task<List<Imagenes>> ObtenerPorProductoAsync(int idProducto)
+        {
+            return await _context.Imagenes.Where(img => img.IdProducto == idProducto).ToListAsync();
+        }
+
         public async Task<int> AddAsync(Imagenes entity)
         {
-            //Relación de muchos a muchos solo con llave primaria compuesta
             await _context.Set<Imagenes>().AddAsync(entity);
             await _context.SaveChangesAsync();
             return entity.IdImagen;
+        }
+
+        public async Task UpdateAsync(Imagenes entity)
+        {
+            await _context.Set<Imagenes>().AddAsync(entity);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task DeleteAsync(int id)
+        {
+            // Raw Query
+            //https://www.learnentityframeworkcore.com/raw-sql/execute-sql
+            int rowAffected = _context.Database.ExecuteSql($"Delete Imagenes Where id_producto = {id}");
+            await Task.FromResult(1);
         }
     }
 }

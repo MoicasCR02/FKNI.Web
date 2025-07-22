@@ -3,6 +3,7 @@ using FKNI.Application.DTOs;
 using FKNI.Application.Services.Interfaces;
 using FKNI.Infraestructure.Models;
 using FKNI.Infraestructure.Repository.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -43,6 +44,19 @@ namespace FKNI.Application.Services.Implementations
 
             // Return
             return await _repository.AddAsync(objectMapped, selectedEtiquetas);
+        }
+
+        public async Task UpdateAsync(int id, ProductosDTO dto, string[] selectedEtiquetas)
+        {
+            var entity = await _repository.FindByIdAsync(id);
+            // Este mapea el dto al objeto existente SIN cambiar el Id
+            _mapper.Map(dto, entity);
+            await _repository.UpdateAsync(entity, selectedEtiquetas);
+        }
+
+        public async Task DeleteAsync(int id)
+        {
+            await _repository.DeleteAsync(id);
         }
     }
 }

@@ -153,7 +153,7 @@ public partial class FKNIContext : DbContext
             entity.Property(e => e.IdProducto).HasColumnName("id_producto");
             entity.Property(e => e.UrlImagen).HasColumnName("url_imagen");
 
-            entity.HasOne(d => d.IdProductoNavigation).WithMany(p => p.Imagenes)
+            entity.HasOne(d => d.IdProductoNavigation).WithMany(p => p.IdImagen)
                 .HasForeignKey(d => d.IdProducto)
                 .HasConstraintName("FK__Imagenes__id_pro__30F848ED");
         });

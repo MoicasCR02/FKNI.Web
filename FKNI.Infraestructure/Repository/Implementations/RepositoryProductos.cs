@@ -23,10 +23,10 @@ namespace FKNI.Infraestructure.Repository.Implementations
             var @object = await _context.Set<Productos>()
                                 .Where(x => x.IdProducto == id_producto)
                                 .Include(x => x.IdCategoriaNavigation)
-                                .Include(x => x.Imagenes)
                                 .Include(x => x.IdEtiqueta)
                                 .Include(x => x.DetallePedidoProducto)
                                 .Include(x => x.Resenas).ThenInclude(r => r.IdUsuarioNavigation)
+                                .Include(x => x.IdImagen)
                                 .FirstAsync();
             return @object!;
         }
@@ -34,11 +34,10 @@ namespace FKNI.Infraestructure.Repository.Implementations
         {
             var collection = await _context.Set<Productos>()
                                 .Include(x => x.IdCategoriaNavigation)
-                                .Include(x => x.Imagenes)
                                 .Include(x => x.IdEtiqueta)
                                 .Include(x => x.DetallePedidoProducto)
                                 .Include(x => x.Resenas).ThenInclude(r => r.IdUsuarioNavigation)
-                                .OrderByDescending(x => x.IdCategoria)
+                                .Include(x => x.IdImagen)
                                 .ToListAsync();
             var hoy = DateTime.Today;
             var promociones = await _context.Set<Promociones>().ToListAsync();
@@ -66,14 +65,6 @@ namespace FKNI.Infraestructure.Repository.Implementations
             await _context.SaveChangesAsync();
             return entity.IdProducto;
         }
-        private async Task<ICollection<Imagenes>> getImagenes(string[] selectedImagenes)
-        {
-            var imagenes = await _context.Set<Imagenes>()
-                .Where(c => selectedImagenes.Contains(c.IdImagen.ToString()))
-                .ToListAsync();
-            return imagenes;
-
-        }
 
         private async Task<ICollection<Etiquetas>> getEtiquetas(string[] selectedEtiquetas)
         {
@@ -83,6 +74,37 @@ namespace FKNI.Infraestructure.Repository.Implementations
             return etiquetas;
 
         }
+        public async Task UpdateAsync(Productos entity, string[] selectedEtiquetas)
+        {
+            // Asegurar que EF esté rastreando el entity
+            _context.Entry(entity).State = EntityState.Modified;
 
+            // Mantener la relación con la categoría
+            var categoria = await _context.Set<Categorias>().FindAsync(entity.IdCategoria);
+            entity.IdCategoriaNavigation = categoria!;
+
+            // Obtener las nuevas etiquetas seleccionadas
+            var nuevasEtiquetas = await getEtiquetas(selectedEtiquetas);
+
+            // Cargar las etiquetas actuales si no vienen cargadas
+            _context.Entry(entity).Collection(e => e.IdEtiqueta).Load();
+
+            // Limpiar y asignar nuevas etiquetas
+            entity.IdEtiqueta.Clear();
+            foreach (var etiqueta in nuevasEtiquetas)
+            {
+                entity.IdEtiqueta.Add(etiqueta);
+            }
+
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task DeleteAsync(int id)
+        {
+            // Raw Query
+            //https://www.learnentityframeworkcore.com/raw-sql/execute-sql
+            int rowAffected = _context.Database.ExecuteSql($"Delete Productos where id_producto = {id}");
+            await Task.FromResult(1);
+        }
     }
 }

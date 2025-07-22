@@ -3,6 +3,7 @@ using FKNI.Application.DTOs;
 using FKNI.Application.Services.Interfaces;
 using FKNI.Infraestructure.Models;
 using FKNI.Infraestructure.Repository.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -35,6 +36,13 @@ namespace FKNI.Application.Services.Implementations
             // Return lista
             return collection;
         }
+
+        public async Task<List<ImagenesDTO>> ObtenerPorProductoAsync(int idProducto)
+        {
+            var list = await _repository.ObtenerPorProductoAsync(idProducto);
+            return _mapper.Map<List<ImagenesDTO>>(list);
+        }
+
         public async Task<int> AddAsync(ImagenesDTO dto)
         {
             var objectMapped = _mapper.Map<Imagenes>(dto);
@@ -42,5 +50,21 @@ namespace FKNI.Application.Services.Implementations
             // Return
             return await _repository.AddAsync(objectMapped);
         }
+
+        public async Task UpdateAsync(ImagenesDTO dto)
+        {
+            //Obtenga el modelo original a actualizar
+            var @object = await _repository.FindByIdAsync(dto.IdProducto);
+            //       source, destination
+            var entity = _mapper.Map(dto, @object!);
+
+
+            await _repository.UpdateAsync(entity);
+        }
+        public async Task DeleteAsync(int id)
+        {
+            await _repository.DeleteAsync(id);
+        }
+
     }
 }

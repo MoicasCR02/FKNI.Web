@@ -11,6 +11,9 @@ namespace FKNI.Infraestructure.Repository.Interfaces
     {
         Task<ICollection<Imagenes>> ListAsync();
         Task<Imagenes> FindByIdAsync(int id);
+        Task<List<Imagenes>> ObtenerPorProductoAsync(int idProducto);
         Task<int> AddAsync(Imagenes entity);
+        Task UpdateAsync(Imagenes entity);
+        Task DeleteAsync(int id);
     }
 }

@@ -11,6 +11,11 @@ namespace FKNI.Application.Services.Interfaces
     {
         Task<ICollection<ImagenesDTO>> ListAsync();
         Task<ImagenesDTO> FindByIdAsync(int id_imagen);
+
+        Task<List<ImagenesDTO>> ObtenerPorProductoAsync(int idProducto);
         Task<int> AddAsync(ImagenesDTO dto);
+        Task UpdateAsync(ImagenesDTO dto);
+        Task DeleteAsync(int id);
+        
     }
 }

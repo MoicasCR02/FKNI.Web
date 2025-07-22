@@ -10,7 +10,7 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Create">
+        <form asp-action="Create" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="NombreProducto" class="control-label"></label>
@@ -56,7 +56,7 @@
                 </div>
                 <div class="form-group">
                     <label asp-for="IdImagen" label for="ImageFiles">Seleccionar imágenes</label>
-                    <input asp-for="IdImagen" type="byte" id="ImageFiles" name="ImageFiles" multiple accept="image/*" class="form-control" />
+                    <input type="file" id="ImageFiles" name="ImageFiles" multiple accept="image/*" class="form-control" />
                 </div>
 
                 <div id="previewList" class="mt-3">

@@ -28,7 +28,7 @@ public partial class Productos
 
     public virtual Categorias? IdCategoriaNavigation { get; set; }
 
-    public virtual ICollection<Imagenes> Imagenes { get; set; } = new List<Imagenes>();
+    public virtual ICollection<Imagenes> IdImagen { get; set; } = new List<Imagenes>();
 
     public virtual ICollection<Promociones> Promociones { get; set; } = new List<Promociones>();
 

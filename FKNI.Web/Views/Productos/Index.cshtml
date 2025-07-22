@@ -19,15 +19,24 @@
                 <div class="card h-100 shadow-sm border-0">
                     @if (item.IdImagen?.Any() == true)
                     {
-                        <img src="data:image/jpeg;base64,@Convert.ToBase64String(item.IdImagen.First().UrlImagen)"
-                             class="card-img-top"
-                             style="object-fit: cover; height: 200px;"
-                             alt="Imagen de @item.NombreProducto" />
+                        @foreach (var img in item.IdImagen)
+                        {
+                            <img src="data:image/jpeg;base64,@Convert.ToBase64String(img.UrlImagen)"
+                                 alt="Imagen del producto"
+                                 class="img-thumbnail"
+                                 style="max-width: 300px;" />
+                        }
                     }
                     else
                     {
-                        <div class="bg-light d-flex justify-content-center align-items-center" style="height: 200px;">
-                            <span class="text-muted">@item.IdImagen.</span>
+                        <div class="d-flex flex-wrap gap-3">
+                            @foreach (var img in item.IdImagen)
+                            {
+                                <img src="data:image/jpeg;base64,@Convert.ToBase64String(img.UrlImagen)"
+                                     alt="Imagen del producto"
+                                     class="img-thumbnail"
+                                     style="max-width: 300px;" />
+                            }
                         </div>
                     }
 

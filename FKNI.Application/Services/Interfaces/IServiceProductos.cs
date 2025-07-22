@@ -13,5 +13,7 @@ namespace FKNI.Application.Services.Interfaces
         Task<ICollection<ProductosDTO>> ListAsync();
         Task<ProductosDTO> FindByIdAsync(int id_producto);
         Task<int> AddAsync(ProductosDTO dto, string[] selectedEtiquetas);
+        Task UpdateAsync(int id, ProductosDTO dto, string[] selectedEtiquetas);
+        Task DeleteAsync(int id);
     }   
 }
