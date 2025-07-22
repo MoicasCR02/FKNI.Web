@@ -28,16 +28,14 @@ public partial class Productos
 
     public virtual Categorias? IdCategoriaNavigation { get; set; }
 
+    public virtual ICollection<Imagenes> Imagenes { get; set; } = new List<Imagenes>();
+
     public virtual ICollection<Promociones> Promociones { get; set; } = new List<Promociones>();
 
     public virtual ICollection<Resenas> Resenas { get; set; } = new List<Resenas>();
 
     public virtual ICollection<Etiquetas> IdEtiqueta { get; set; } = new List<Etiquetas>();
 
-    public virtual ICollection<Imagenes> IdImagen { get; set; } = new List<Imagenes>();
-
     [NotMapped]
     public decimal Descuento { get; set; } = 0;
-
-
 }

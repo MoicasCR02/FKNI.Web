@@ -23,7 +23,7 @@ namespace FKNI.Infraestructure.Repository.Implementations
             var @object = await _context.Set<Productos>()
                                 .Where(x => x.IdProducto == id_producto)
                                 .Include(x => x.IdCategoriaNavigation)
-                                .Include(x => x.IdImagen)
+                                .Include(x => x.Imagenes)
                                 .Include(x => x.IdEtiqueta)
                                 .Include(x => x.DetallePedidoProducto)
                                 .Include(x => x.Resenas).ThenInclude(r => r.IdUsuarioNavigation)
@@ -34,7 +34,7 @@ namespace FKNI.Infraestructure.Repository.Implementations
         {
             var collection = await _context.Set<Productos>()
                                 .Include(x => x.IdCategoriaNavigation)
-                                .Include(x => x.IdImagen)
+                                .Include(x => x.Imagenes)
                                 .Include(x => x.IdEtiqueta)
                                 .Include(x => x.DetallePedidoProducto)
                                 .Include(x => x.Resenas).ThenInclude(r => r.IdUsuarioNavigation)
@@ -53,5 +53,36 @@ namespace FKNI.Infraestructure.Repository.Implementations
 
             return collection;
         }
+
+        public async Task<int> AddAsync(Productos entity, string[] selectedEtiquetas)
+        {
+            //Relación de muchos a muchos solo con llave primaria compuesta
+            var etiquetas = await getEtiquetas(selectedEtiquetas);
+            entity.IdEtiqueta = etiquetas;
+            var imagenes = await getEtiquetas(selectedEtiquetas);
+            entity.IdEtiqueta = etiquetas;
+            //entity.IdImagen = imagens;
+            await _context.Set<Productos>().AddAsync(entity);
+            await _context.SaveChangesAsync();
+            return entity.IdProducto;
+        }
+        private async Task<ICollection<Imagenes>> getImagenes(string[] selectedImagenes)
+        {
+            var imagenes = await _context.Set<Imagenes>()
+                .Where(c => selectedImagenes.Contains(c.IdImagen.ToString()))
+                .ToListAsync();
+            return imagenes;
+
+        }
+
+        private async Task<ICollection<Etiquetas>> getEtiquetas(string[] selectedEtiquetas)
+        {
+            var etiquetas = await _context.Set<Etiquetas>()
+                .Where(c => selectedEtiquetas.Contains(c.IdEtiqueta.ToString()))
+                .ToListAsync();
+            return etiquetas;
+
+        }
+
     }
 }

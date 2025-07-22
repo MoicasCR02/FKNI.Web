@@ -8,9 +8,10 @@ using System.Threading.Tasks;
 
 namespace FKNI.Application.Services.Interfaces
 {
-        public interface IServiceProductos
-        {
-            Task<ICollection<ProductosDTO>> ListAsync();
-            Task<ProductosDTO> FindByIdAsync(int id_producto);
-        }   
+    public interface IServiceProductos
+    {
+        Task<ICollection<ProductosDTO>> ListAsync();
+        Task<ProductosDTO> FindByIdAsync(int id_producto);
+        Task<int> AddAsync(ProductosDTO dto, string[] selectedEtiquetas);
+    }   
 }

@@ -9,5 +9,7 @@ public partial class Imagenes
 
     public byte[]? UrlImagen { get; set; }
 
-    public virtual ICollection<Productos> IdProducto { get; set; } = new List<Productos>();
+    public int IdProducto { get; set; }
+
+    public virtual Productos? IdProductoNavigation { get; set; }
 }

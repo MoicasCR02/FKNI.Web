@@ -31,5 +31,13 @@ namespace FKNI.Infraestructure.Repository.Implementations
             var collection = await _context.Set<Imagenes>().AsNoTracking().ToListAsync();
             return collection;
         }
+
+        public async Task<int> AddAsync(Imagenes entity)
+        {
+            //Relación de muchos a muchos solo con llave primaria compuesta
+            await _context.Set<Imagenes>().AddAsync(entity);
+            await _context.SaveChangesAsync();
+            return entity.IdImagen;
+        }
     }
 }
