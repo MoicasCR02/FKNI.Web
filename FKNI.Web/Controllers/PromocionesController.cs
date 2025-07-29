@@ -38,6 +38,7 @@ namespace FKNI.Web.Controllers
             {
                 throw new Exception(ex.Message);
             }
+
         }
     }
 }

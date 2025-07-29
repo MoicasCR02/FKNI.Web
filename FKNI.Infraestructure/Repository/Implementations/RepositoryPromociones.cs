@@ -17,6 +17,7 @@ namespace FKNI.Infraestructure.Repository.Implementations
         {
             _context = context;
         }
+
         public async Task<Promociones> FindByIdAsync(int id_promocion)
         {
             //Obtener un Libro con su autor y las lista de categorías
@@ -25,8 +26,9 @@ namespace FKNI.Infraestructure.Repository.Implementations
                                 .Include(x => x.IdProductoNavigation)
                                 .Include(x => x.IdCategoriaNavigation)
                                 .FirstAsync();
-                return @object;
+            return @object;
         }
+
         public async Task<ICollection<Promociones>> ListAsync()
         {
             //Listar los libros incluyendo su autor, ordenado de forma descendente
@@ -36,6 +38,13 @@ namespace FKNI.Infraestructure.Repository.Implementations
                                 .OrderBy(x => x.IdPromocion)
                                 .ToListAsync();
             return collection;
+        }
+
+        public async Task CreateAsync(Promociones entity)
+        {
+            // Add the entity to the context and save changes
+            await _context.Set<Promociones>().AddAsync(entity);
+            await _context.SaveChangesAsync();
         }
     }
 }

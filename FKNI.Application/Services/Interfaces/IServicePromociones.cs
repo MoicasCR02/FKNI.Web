@@ -1,4 +1,5 @@
 ﻿using FKNI.Application.DTOs;
+using FKNI.Infraestructure.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,6 +12,8 @@ namespace FKNI.Application.Services.Interfaces
     {
         Task<ICollection<PromocionesDTO>> ListAsync();
         Task<PromocionesDTO > FindByIdAsync(int id_promocion);
+
+        
 
     }
 }
