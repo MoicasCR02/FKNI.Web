@@ -39,5 +39,12 @@ namespace FKNI.Infraestructure.Repository.Implementations
                 .AsNoTracking().ToListAsync();
             return collection;
         }
+
+        public async Task<int> AddAsync(Resenas entity)
+        {
+            await _context.Set<Resenas>().AddAsync(entity);
+            await _context.SaveChangesAsync();
+            return entity.IdProducto;
+        }
     }
 }

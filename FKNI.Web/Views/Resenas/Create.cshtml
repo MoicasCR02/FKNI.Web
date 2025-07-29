@@ -1,0 +1,144 @@
+﻿@model FKNI.Application.DTOs.ResenasDTO
+
+@{
+    ViewData["Title"] = "Create";
+    var producto = ViewBag.Producto;
+    var usuario = ViewBag.Usuario;
+}
+
+<h1>Create</h1>
+
+<h4>Reseña</h4>
+<hr />
+<div class="row">
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+   
+    <div class="col-md-6">
+        @if (!ViewData.ModelState.IsValid)
+        {
+            <div class="alert alert-danger">
+                @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                {
+                    <p>@error.ErrorMessage</p>
+                }
+            </div>
+        }
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            @* ID de Usuario (oculto) *@
+            <input type="hidden" asp-for="IdUsuario" />
+
+            <div class="form-group">
+                <label>Usuario</label>
+                <input type="hidden" class="form-control" value="@usuario.IdUsuario" disabled />
+                <label>@usuario.NombreUsuario</label>
+            </div>
+
+            @* ID de Producto (oculto) *@
+            <input type="hidden" asp-for="IdProducto" />
+
+            <div class="form-group">
+                <label>Producto </label>
+                <input type="hidden" class="form-control" value="@producto.IdProducto" disabled />
+                <label>@producto.NombreProducto</label>
+            </div>
+
+            @* Fecha automática *@
+            <div class="form-group">
+                <label asp-for="Fecha" class="control-label"></label>
+                <input asp-for="Fecha" class="form-control" value="@DateTime.Now.ToString("yyyy-MM-ddTHH:mm")" type="datetime-local" />
+                <span asp-validation-for="Fecha" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Comentario" class="control-label"></label>
+                <input asp-for="Comentario" class="form-control" />
+                <span asp-validation-for="Comentario" class="text-danger"></span>
+            </div>
+
+            <style>
+                .star-rating i {
+                    cursor: pointer;
+                    font-size: 1.9rem;
+                    color: #ffc107; /* color estrella “on” */
+                    margin: 0 .1rem;
+                    transition: transform .15s;
+                }
+
+                    .star-rating i:hover {
+                        transform: scale(1.15);
+                    }
+
+                    .star-rating i.far {
+                        color: #e4e5e9;
+                    }
+                /* estrella “off” */
+            </style>
+
+            <div class="form-group">
+                <label asp-for="Valoracion" class="form-label"></label>
+
+                <!-- input oculto que se liga al modelo -->
+                <input type="hidden" asp-for="Valoracion" id="Valoracion" />
+
+                <!-- 5 estrellas -->
+                <div id="star-container" class="star-rating">
+                    @for (var i = 1; i <= 5; i++)
+                    {
+                        <i class="fa-star @(Model?.Valoracion >= i ? "fas" : "far")"
+                           data-value="@i"></i>
+                    }
+                </div>
+
+                <span asp-validation-for="Valoracion" class="text-danger"></span>
+            </div>
+
+            <script>
+                document.addEventListener("DOMContentLoaded", () => {
+                    const stars = document.querySelectorAll('#star-container i');
+                    const input  = document.getElementById('Valoracion');
+
+                    // Pinta las estrellas según el valor recibido
+                    const paint = val => {
+                        stars.forEach(s => {
+                            s.classList.toggle('fas', s.dataset.value <= val);
+                            s.classList.toggle('far', s.dataset.value >  val);
+                        });
+                    };
+
+                    // Al pasar el mouse: vista previa
+                    stars.forEach(s => {
+                        s.addEventListener('mouseenter', () => paint(s.dataset.value));
+                        s.addEventListener('click',      () => {            // Selección definitiva
+                            input.value = s.dataset.value;
+                            paint(s.dataset.value);
+                        });
+                    });
+
+                    // Al salir del contenedor: vuelve al valor elegido (si hay)
+                    document.getElementById('star-container')
+                            .addEventListener('mouseleave', () => paint(input.value || 0));
+
+                    // Si el modelo ya traía un valor (edición), pín­talo al cargar
+                    paint(input.value || 0);
+                });
+            </script>
+
+            <div class="form-group mt-3">
+                <input type="submit" value="Guardar Reseña" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="mt-3">
+    <a asp-action="Index">Volver a la lista</a>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

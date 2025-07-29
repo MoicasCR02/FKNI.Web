@@ -21,8 +21,8 @@ namespace FKNI.Application.DTOs
 
         public bool? Estado { get; set; }
 
-        public virtual Productos IdProductoNavigation { get; set; } = null!;
+        public virtual Productos? IdProductoNavigation { get; set; } = null!;
 
-        public virtual Usuarios IdUsuarioNavigation { get; set; } = null!;
+        public virtual Usuarios? IdUsuarioNavigation { get; set; } = null!;
     }
 }

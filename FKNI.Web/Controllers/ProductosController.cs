@@ -104,7 +104,7 @@ namespace FKNI.Web.Controllers
                         await _serviceImagenes.AddAsync(new ImagenesDTO
                         {
 
-                            IdProducto = (ultimoProducto?.IdProducto ?? 0) + 1,
+                            IdProducto = (ultimoProducto?.IdProducto ?? 0),
                             UrlImagen = memoryStream.ToArray()
                         });
                     }
