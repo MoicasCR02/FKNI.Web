@@ -38,7 +38,13 @@ namespace FKNI.Web.Controllers
             {
                 throw new Exception(ex.Message);
             }
-
         }
+
+        public async Task<IActionResult> Create()
+        {
+
+            return View();
+        }
+       
     }
 }

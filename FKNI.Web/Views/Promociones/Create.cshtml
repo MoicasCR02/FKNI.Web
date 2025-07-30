@@ -1,300 +1,58 @@
-﻿@* @model FKNI.Application.DTOs.PromocionesDTO
+﻿@model FKNI.Application.DTOs.PromocionesDTO
 
 @{
-    ViewData["Title"] = "Crear Promoción";
+    ViewData["Title"] = "Create";
 }
 
-<style>
-    .contenido-ajustado-footer {
-        padding-bottom: 180px;
-    }
-</style>
+<h1>Create</h1>
 
-<div class="container my-5 contenido-ajustado-footer">
-    <h2 class="text-primary mb-4">Crear Promoción</h2>
-
-    <div class="card shadow-sm">
-        <div class="card-body">
-            <form asp-action="Create" id="formCreatePromo" onsubmit="return validarPromocion();">
-                <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
-
-                <div class="mb-3">
-                    <label asp-for="NombrePromocion" class="form-label">Nombre de la promoción</label>
-                    <input asp-for="NombrePromocion" class="form-control" required minlength="3" />
-                    <span class="text-danger" id="errorNombre"></span>
-                </div>
-
-                <div class="mb-3">
-                    <label class="form-label">Tipo de promoción</label>
-                    <select id="TipoPromocion" name="TipoPromocion" class="form-select" required>
-                        <option value="">Seleccione una opción</option>
-                        <option value="Producto">Producto</option>
-                        <option value="Categoria">Categoría</option>
-                    </select>
-                    <span class="text-danger" id="errorTipo"></span>
-                </div>
-
-                <div class="mb-3" id="aplicaAContainer" style="display: none;">
-                    <label class="form-label" id="aplicaA-label">Aplica a</label>
-                    <select id="AplicaA" name="AplicaA" class="form-select" required>
-                        <option value="">Seleccione una opción</option>
-                    </select>
-                    <span class="text-danger" id="errorAplicaA"></span>
-                </div>
-
-                <div class="mb-3">
-                    <label asp-for="Descuento" class="form-label">Descuento (%)</label>
-                    <input asp-for="Descuento" class="form-control" type="number" min="1" max="100" required />
-                    <span class="text-danger" id="errorDescuento"></span>
-                </div>
-
-                <div class="mb-3">
-                    <label asp-for="FechaInicio" class="form-label">Fecha de inicio</label>
-                    <input asp-for="FechaInicio" class="form-control" type="date" required />
-                    <span class="text-danger" id="errorInicio"></span>
-                </div>
-
-                <div class="mb-3">
-                    <label asp-for="FechaFin" class="form-label">Fecha de fin</label>
-                    <input asp-for="FechaFin" class="form-control" type="date" required />
-                    <span class="text-danger" id="errorFin"></span>
-                </div>
-
-                <div class="mt-4 d-flex justify-content-between">
-                    <a asp-action="Index" class="btn btn-outline-secondary">
-                        <i class="fas fa-arrow-left"></i> Cancelar
-                    </a>
-                    <button type="submit" class="btn btn-primary">
-                        <i class="fas fa-save"></i> Guardar promoción
-                    </button>
-                </div>
-            </form>
-        </div>
+<h4>PromocionesDTO</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="TipoPromocion" class="control-label"></label>
+                <input asp-for="TipoPromocion" class="form-control" />
+                <span asp-validation-for="TipoPromocion" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="IdProducto" class="control-label"></label>
+                <input asp-for="IdProducto" class="form-control" />
+                <span asp-validation-for="IdProducto" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="IdCategoria" class="control-label"></label>
+                <input asp-for="IdCategoria" class="form-control" />
+                <span asp-validation-for="IdCategoria" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Descuento" class="control-label"></label>
+                <input asp-for="Descuento" class="form-control" />
+                <span asp-validation-for="Descuento" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="FechaInicio" class="control-label"></label>
+                <input asp-for="FechaInicio" class="form-control" />
+                <span asp-validation-for="FechaInicio" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="FechaFin" class="control-label"></label>
+                <input asp-for="FechaFin" class="form-control" />
+                <span asp-validation-for="FechaFin" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
     </div>
 </div>
 
-@section Scripts {
-    <script>
-        const tipoSelect = document.getElementById('TipoPromocion');
-        const aplicaAContainer = document.getElementById('aplicaAContainer');
-        const aplicaASelect = document.getElementById('AplicaA');
-        const aplicaALabel = document.getElementById('aplicaA-label');
-
-        const productos = @Html.Raw(Json.Serialize(ViewBag.ListProductos));
-        const categorias = @Html.Raw(Json.Serialize(ViewBag.ListCategorias));
-
-        tipoSelect.addEventListener('change', function () {
-            const selected = this.value;
-            aplicaASelect.innerHTML = '';
-            aplicaAContainer.style.display = selected ? 'block' : 'none';
-
-            if (selected === 'Producto') {
-                aplicaALabel.textContent = 'Seleccione un producto';
-                productos.forEach(p => {
-                    const opt = document.createElement('option');
-                    opt.value = p.IdProducto;
-                    opt.text = p.NombreProducto;
-                    aplicaASelect.appendChild(opt);
-                });
-            } else if (selected === 'Categoria') {
-                aplicaALabel.textContent = 'Seleccione una categoría';
-                categorias.forEach(c => {
-                    const opt = document.createElement('option');
-                    opt.value = c.IdCategoria;
-                    opt.text = c.NombreCategoria;
-                    aplicaASelect.appendChild(opt);
-                });
-            }
-        });
-
-        function validarPromocion() {
-            let valido = true;
-
-            const nombre = document.querySelector('[name="NombrePromocion"]');
-            const tipo = document.querySelector('[name="TipoPromocion"]');
-            const aplicaA = document.querySelector('[name="AplicaA"]');
-            const descuento = document.querySelector('[name="Descuento"]');
-            const inicio = document.querySelector('[name="FechaInicio"]');
-            const fin = document.querySelector('[name="FechaFin"]');
-
-            document.querySelectorAll('span.text-danger').forEach(span => span.textContent = '');
-
-            const hoy = new Date().toISOString().split("T")[0];
-
-            if (!nombre.value || nombre.value.length < 3) {
-                document.getElementById('errorNombre').textContent = "Ingrese un nombre válido (mínimo 3 caracteres).";
-                valido = false;
-            }
-
-            if (!tipo.value) {
-                document.getElementById('errorTipo').textContent = "Seleccione un tipo de promoción.";
-                valido = false;
-            }
-
-            if (!aplicaA.value) {
-                document.getElementById('errorAplicaA').textContent = "Seleccione el producto o categoría correspondiente.";
-                valido = false;
-            }
-
-            if (!descuento.value || descuento.value <= 0 || descuento.value > 100) {
-                document.getElementById('errorDescuento').textContent = "Ingrese un porcentaje de descuento válido (1-100).";
-                valido = false;
-            }
-
-            if (!inicio.value || inicio.value < hoy) {
-                document.getElementById('errorInicio').textContent = "La fecha de inicio no puede ser anterior a hoy.";
-                valido = false;
-            }
-
-            if (!fin.value || fin.value < inicio.value) {
-                document.getElementById('errorFin').textContent = "La fecha de fin no puede ser anterior a la de inicio.";
-                valido = false;
-            }
-
-            return valido;
-        }
-    </script>
-}
-
-}
-
-        <div class="card-body">
-            <form asp-action="Create" enctype="multipart/form-data" id="formCreateProducto" onsubmit="return validarFormulario();">
-                <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
-
-                <div class="mb-3">
-                    <label asp-for="NombreProducto" class="form-label">Nombre del producto</label>
-                    <input asp-for="NombreProducto" class="form-control" required minlength="3" />
-                    <span class="text-danger" id="errorNombre"></span>
-                </div>
-
-                <div class="mb-3">
-                    <label asp-for="Descripcion" class="form-label">Descripción detallada</label>
-                    <textarea asp-for="Descripcion" class="form-control" rows="3" required minlength="10"></textarea>
-                    <span class="text-danger" id="errorDescripcion"></span>
-                </div>
-
-                <div class="mb-3">
-                    <label asp-for="Precio" class="form-label">Precio (₡)</label>
-                    <input asp-for="Precio" class="form-control" type="number" min="0.01" step="0.01" required />
-                    <span class="text-danger" id="errorPrecio"></span>
-                </div>
-
-                <div class="mb-3">
-                    <label asp-for="Stock" class="form-label">Stock disponible</label>
-                    <input asp-for="Stock" class="form-control" type="number" min="0" required />
-                    <span class="text-danger" id="errorStock"></span>
-                </div>
-
-                <div class="mb-3">
-                    <label asp-for="IdCategoria" class="form-label">Categoría</label>
-                    @Html.DropDownListFor(m => m.IdCategoria,
-                    new SelectList(ViewBag.ListCategoria, "IdCategoria", "NombreCategoria"),
-                                        "Seleccione una categoría",
-                                        new { @class = "form-select", required = "required" })
-                    <span class="text-danger" id="errorCategoria"></span>
-                </div>
-
-                <div class="mb-3">
-                    <label class="form-label">Etiquetas</label>
-                    <select id="selectedEtiquetas" name="selectedEtiquetas"
-                            class="form-select" asp-items="ViewBag.ListEtiquetas"
-                            multiple="multiple" required></select>
-                    <span class="form-text">Use Ctrl o Cmd para seleccionar varias.</span>
-                    <span class="text-danger" id="errorEtiquetas"></span>
-                </div>
-
-                <div class="mb-3">
-                    <label for="ImageFiles" class="form-label">Imágenes del producto</label>
-                    <input type="file" id="ImageFiles" name="ImageFiles" multiple accept="image/*" class="form-control" required />
-                    <div id="previewList" class="mt-3 d-flex flex-wrap gap-3"></div>
-                    <span class="text-danger" id="errorImagenes"></span>
-                </div>
-
-                <div class="mt-4 d-flex justify-content-between">
-                    <a asp-action="Index" class="btn btn-outline-secondary">
-                        <i class="fas fa-arrow-left"></i> Cancelar
-                    </a>
-                    <button type="submit" class="btn btn-primary">
-                        <i class="fas fa-save"></i> Guardar producto
-                    </button>
-                </div>
-            </form>
-        </div>
-    </div>
+<div>
+    <a asp-action="Index">Back to List</a>
 </div>
 
 @section Scripts {
-    <script>
-        document.getElementById('ImageFiles').addEventListener('change', function (event) {
-            const previewContainer = document.getElementById('previewList');
-            previewContainer.innerHTML = '';
-
-            const files = event.target.files;
-            Array.from(files).forEach(file => {
-                const reader = new FileReader();
-                reader.onload = function (e) {
-                    const img = document.createElement('img');
-                    img.src = e.target.result;
-                    img.style.maxWidth = '120px';
-                    img.style.maxHeight = '120px';
-                    img.classList.add("img-thumbnail");
-                    previewContainer.appendChild(img);
-                };
-                reader.readAsDataURL(file);
-            });
-        });
-
-        function validarFormulario() {
-            let valido = true;
-
-            const nombre = document.querySelector('[name="NombreProducto"]');
-            const descripcion = document.querySelector('[name="Descripcion"]');
-            const precio = document.querySelector('[name="Precio"]');
-            const stock = document.querySelector('[name="Stock"]');
-            const categoria = document.querySelector('[name="IdCategoria"]');
-            const etiquetas = document.querySelector('#selectedEtiquetas');
-            const imagenes = document.querySelector('#ImageFiles');
-
-            document.querySelectorAll('span.text-danger').forEach(span => span.textContent = '');
-
-            if (!nombre.value || nombre.value.length < 3) {
-                document.getElementById('errorNombre').textContent = "Debe ingresar un nombre de al menos 3 caracteres.";
-                valido = false;
-            }
-
-            if (!descripcion.value || descripcion.value.length < 10) {
-                document.getElementById('errorDescripcion').textContent = "La descripción debe tener al menos 10 caracteres.";
-                valido = false;
-            }
-
-            if (!precio.value || parseFloat(precio.value) <= 0) {
-                document.getElementById('errorPrecio').textContent = "Ingrese un precio mayor a ₡0.";
-                valido = false;
-            }
-
-            if (!stock.value || parseInt(stock.value) < 0) {
-                document.getElementById('errorStock').textContent = "El stock no puede ser negativo.";
-                valido = false;
-            }
-
-            if (!categoria.value) {
-                document.getElementById('errorCategoria').textContent = "Debe seleccionar una categoría.";
-                valido = false;
-            }
-
-            if ([...etiquetas.selectedOptions].length === 0) {
-                document.getElementById('errorEtiquetas').textContent = "Seleccione al menos una etiqueta.";
-                valido = false;
-            }
-
-            if (!imagenes.files.length) {
-                document.getElementById('errorImagenes').textContent = "Debe cargar al menos una imagen.";
-                valido = false;
-            }
-
-            return valido;
-        }
-    </script>
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }
- *@

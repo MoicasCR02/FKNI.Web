@@ -40,11 +40,13 @@ namespace FKNI.Infraestructure.Repository.Implementations
             return collection;
         }
 
-        public async Task CreateAsync(Promociones entity)
+        public async Task<int> AddAsync(Promociones entity)
         {
-            // Add the entity to the context and save changes
             await _context.Set<Promociones>().AddAsync(entity);
             await _context.SaveChangesAsync();
+            return entity.IdPromocion;
         }
+
+
     }
 }

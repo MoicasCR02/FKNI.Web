@@ -1,64 +1,64 @@
 ﻿@model FKNI.Application.DTOs.ProductosDTO
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Editar Producto";
 }
 
-<h1>Edit</h1>
+<div class="container mt-4 mb-5 pb-5">
+    <h2 class="mb-4">Editar Producto</h2>
 
-<h4>ProductosDTO</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit" enctype="multipart/form-data">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="NombreProducto" class="control-label"></label>
-                <input asp-for="NombreProducto" class="form-control" />
-                <span asp-validation-for="NombreProducto" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Descripcion" class="control-label"></label>
-                <input asp-for="Descripcion" class="form-control" />
-                <span asp-validation-for="Descripcion" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Precio" class="control-label"></label>
-                <input asp-for="Precio" class="form-control" />
-                <span asp-validation-for="Precio" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Stock" class="control-label"></label>
-                <input asp-for="Stock" class="form-control" />
-                <span asp-validation-for="Stock" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="IdCategoria" class="control-label"></label>
-                @* <input asp-for="IdAutor" class="form-control" /> *@
-                @Html.DropDownListFor(m => m.IdCategoria,
-                new SelectList(ViewBag.ListCategoria, "IdCategoria", "NombreCategoria"),
-                                new { @class = "form-select" })
-                <span asp-validation-for="IdCategoria" class="text-danger"></span>
-            </div>
-            <div class="form-group row g-3">
-                <div class="col">
-                    <label asp-for="IdEtiqueta" class="form-label mt-4"></label>
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <form asp-action="Edit" enctype="multipart/form-data">
+                <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                <div class="mb-3">
+                    <label asp-for="NombreProducto" class="form-label"></label>
+                    <input asp-for="NombreProducto" class="form-control" />
+                    <span asp-validation-for="NombreProducto" class="text-danger"></span>
                 </div>
-                <div class="col">
-                    @*  @Html.DropDownList("selectedCategorias",
-                    (MultiSelectList)ViewBag.ListCategorias,
-                    new { htmlAttributes = new { @class = "form-control" }, multiple = "multiple" }) *@
+
+                <div class="mb-3">
+                    <label asp-for="Descripcion" class="form-label"></label>
+                    <input asp-for="Descripcion" class="form-control" />
+                    <span asp-validation-for="Descripcion" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Precio" class="form-label"></label>
+                    <input asp-for="Precio" class="form-control" />
+                    <span asp-validation-for="Precio" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Stock" class="form-label"></label>
+                    <input asp-for="Stock" class="form-control" />
+                    <span asp-validation-for="Stock" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="IdCategoria" class="form-label"></label>
+                    @Html.DropDownListFor(m => m.IdCategoria,
+                             new SelectList(ViewBag.ListCategoria, "IdCategoria", "NombreCategoria"),
+                             new { @class = "form-select" })
+                    <span asp-validation-for="IdCategoria" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="IdEtiqueta" class="form-label"></label>
                     <select id="selectedEtiquetas" name="selectedEtiquetas"
-                            class="form-control" asp-items="ViewBag.ListEtiquetas"
+                            class="form-select" asp-items="ViewBag.ListEtiquetas"
                             multiple="multiple"></select>
                 </div>
-            </div>
-            <div class="form-group">
-                <label asp-for="IdImagen" label for="ImageFiles">Seleccionar imágenes</label>
-                <input type="file" id="ImageFiles" name="ImageFiles" multiple accept="image/*" class="form-control" />
-                <div class="form-group">
-                    <label>Imágenes actuales</label>
-                    <div class="d-flex flex-wrap" style="gap: 10px;">
+
+                <div class="mb-3">
+                    <label for="ImageFiles" class="form-label">Seleccionar imágenes</label>
+                    <input type="file" id="ImageFiles" name="ImageFiles" multiple accept="image/*" class="form-control" />
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Imágenes actuales</label>
+                    <div class="d-flex flex-wrap gap-3">
                         @if (ViewBag.ListImagenes != null)
                         {
                             foreach (var img in ViewBag.ListImagenes)
@@ -66,8 +66,8 @@
                                 var base64 = Convert.ToBase64String(img.UrlImagen);
                                 var imageSrc = $"data:image/jpeg;base64,{base64}";
 
-                                <div style="text-align:center;">
-                                    <img src="@imageSrc" style="max-width: 100px; max-height: 100px; border: 1px solid #ccc;" />
+                                <div class="text-center">
+                                    <img src="@imageSrc" class="img-thumbnail" style="max-width: 100px;" />
                                 </div>
                             }
                         }
@@ -78,57 +78,51 @@
                     </div>
                 </div>
 
+                <div id="previewList" class="mt-3"></div>
+
+                <div class="d-grid mt-4">
+                    <input type="submit" value="Guardar Cambios" class="btn btn-primary" />
+                </div>
+            </form>
+
+            <div class="mt-3">
+                <a asp-action="Index" class="btn btn-link">← Volver a la lista</a>
             </div>
-            <div id="previewList" class="mt-3">
-                <!-- Aquí se mostrarán las imágenes seleccionadas -->
-            </div>
-
-            <script>
-                document.getElementById('ImageFiles').addEventListener('change', function (event) {
-                    const previewContainer = document.getElementById('previewList');
-                    previewContainer.innerHTML = ''; // Limpiar la vista previa anterior
-
-                    const files = event.target.files;
-
-                    for (let i = 0; i < files.length; i++) {
-                        const file = files[i];
-
-                        const reader = new FileReader();
-                        reader.onload = function (e) {
-                            const imgDiv = document.createElement('div');
-                            imgDiv.style.marginBottom = '10px';
-
-                            const img = document.createElement('img');
-                            img.src = e.target.result;
-                            img.style.maxWidth = '150px';
-                            img.style.maxHeight = '150px';
-                            img.style.marginRight = '10px';
-                            img.style.border = '1px solid #ccc';
-
-                            const name = document.createElement('p');
-                            name.textContent = file.name;
-
-                            imgDiv.appendChild(img);
-                            imgDiv.appendChild(name);
-
-                            previewContainer.appendChild(imgDiv);
-                        };
-
-                        reader.readAsDataURL(file);
-                    }
-                });
-            </script>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
-        </form>
+        </div>
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
-
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script>
+        document.getElementById('ImageFiles').addEventListener('change', function (event) {
+            const previewContainer = document.getElementById('previewList');
+            previewContainer.innerHTML = '';
+
+            const files = event.target.files;
+            for (let i = 0; i < files.length; i++) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    const imgDiv = document.createElement('div');
+                    imgDiv.classList.add('mb-3');
+
+                    const img = document.createElement('img');
+                    img.src = e.target.result;
+                    img.classList.add('img-thumbnail');
+                    img.style.maxWidth = '150px';
+
+                    const name = document.createElement('p');
+                    name.textContent = files[i].name;
+
+                    imgDiv.appendChild(img);
+                    imgDiv.appendChild(name);
+                    previewContainer.appendChild(imgDiv);
+                };
+                reader.readAsDataURL(files[i]);
+            }
+        });
+    </script>
 }
