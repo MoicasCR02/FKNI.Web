@@ -139,48 +139,72 @@ namespace FKNI.Web.Controllers
         // POST: ProductosController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, ProductosDTO dto, List<IFormFile> ImageFiles, string[] selectedEtiquetas)
+        public async Task<IActionResult> Edit(int id, ProductosDTO dto, List<IFormFile> ImageFiles, string[] selectedEtiquetas, string imagenesEliminadas)
         {
+            ModelState.Remove("imagenesEliminadas");
+
             if (!ModelState.IsValid)
             {
-                // Lee del ModelState todos los errores que
-                // vienen para el lado del server
                 string errors = string.Join("; ", ModelState.Values
                                    .SelectMany(x => x.Errors)
                                    .Select(x => x.ErrorMessage));
                 ViewBag.ErrorMessage = errors;
-                return View();
+                return View(dto);
             }
-            else
+
+            // 1. Eliminar imágenes si hay IDs
+            if (!string.IsNullOrWhiteSpace(imagenesEliminadas))
             {
-                dto.IdProducto = id;
-                await _serviceProductos.UpdateAsync(id, dto, selectedEtiquetas);
-                // 2. Solo si se subieron nuevas imágenes
-                if (ImageFiles != null && ImageFiles.Count > 0)
+                var idsEliminados = imagenesEliminadas.Split(',').Select(int.Parse).ToList();
+
+                foreach (var imgId in idsEliminados)
                 {
-                    // Eliminar imágenes anteriores
-                    await _serviceImagenes.DeleteAsync(id);
+                    await _serviceImagenes.DeleteAsync(imgId, id);
+                }
+            }
 
-                    // Subir nuevas imágenes
-                    foreach (var imgs in ImageFiles)
+            // 2. Obtener imágenes actuales actualizadas después de la eliminación
+            var imagenesActuales = await _serviceImagenes.ObtenerPorProductoAsync(id);
+
+            // 3. Agregar nuevas imágenes si existen
+            if (ImageFiles != null && ImageFiles.Count > 0)
+            {
+                foreach (var img in ImageFiles)
+                {
+                    using (var memoryStream = new MemoryStream())
                     {
-                        using (var memoryStream = new MemoryStream())
-                        {
-                            await imgs.CopyToAsync(memoryStream);
+                        await img.CopyToAsync(memoryStream);
 
-                            await _serviceImagenes.UpdateAsync(new ImagenesDTO
-                            {
-                                IdProducto = id,
-                                UrlImagen = memoryStream.ToArray()
-                            });
-                        }
+                        var nuevaImagen = new ImagenesDTO
+                        {
+                            IdProducto = id,
+                            UrlImagen = memoryStream.ToArray()
+                        };
+
+                        int id_imagen = await _serviceImagenes.AddAsync(nuevaImagen);
+                        nuevaImagen.IdImagen = id_imagen;
+                        imagenesActuales.Add(nuevaImagen);
                     }
                 }
-
-                return RedirectToAction("Index");
             }
 
+            // 4. Mapear las imágenes DTO a entidad para asignar al DTO del producto
+            var imagenesEntidad = imagenesActuales.Select(img => new Imagenes
+            {
+                IdImagen = img.IdImagen,
+                IdProducto = img.IdProducto,
+                UrlImagen = img.UrlImagen
+            }).ToList();
 
+            dto.IdProducto = id;
+            dto.IdImagen = imagenesEntidad;
+
+            // 5. Actualizar producto y colecciones con método que cargue bien el entity desde BD
+            await _serviceProductos.UpdateAsync(id, dto, selectedEtiquetas);
+
+            return RedirectToAction("Index");
         }
+
+
     }
 }

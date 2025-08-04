@@ -61,9 +61,9 @@ namespace FKNI.Application.Services.Implementations
 
             await _repository.UpdateAsync(entity);
         }
-        public async Task DeleteAsync(int id)
+        public async Task DeleteAsync(int id, int idProducto)
         {
-            await _repository.DeleteAsync(id);
+            await _repository.DeleteAsync(id, idProducto);
         }
 
     }

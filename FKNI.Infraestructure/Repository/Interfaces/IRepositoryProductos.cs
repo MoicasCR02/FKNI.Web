@@ -12,7 +12,7 @@ namespace FKNI.Infraestructure.Repository.Interfaces
         Task<ICollection<Productos>> ListAsync();
         Task<Productos> FindByIdAsync(int id_producto);
         Task<int> AddAsync(Productos entity, string[] selectedEtiquetas);
-        Task UpdateAsync(Productos entity, string[] selectedEtiquetas);
+        Task UpdateAsync(int id, Productos entity, string[] selectedEtiquetas);
         Task DeleteAsync(int id);
 
     }

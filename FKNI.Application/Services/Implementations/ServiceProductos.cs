@@ -51,7 +51,7 @@ namespace FKNI.Application.Services.Implementations
             var entity = await _repository.FindByIdAsync(id);
             // Este mapea el dto al objeto existente SIN cambiar el Id
             _mapper.Map(dto, entity);
-            await _repository.UpdateAsync(entity, selectedEtiquetas);
+            await _repository.UpdateAsync(id,entity, selectedEtiquetas);
         }
 
         public async Task DeleteAsync(int id)

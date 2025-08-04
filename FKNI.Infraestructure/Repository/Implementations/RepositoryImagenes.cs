@@ -50,11 +50,11 @@ namespace FKNI.Infraestructure.Repository.Implementations
             await _context.SaveChangesAsync();
         }
 
-        public async Task DeleteAsync(int id)
+        public async Task DeleteAsync(int id, int idProducto)
         {
             // Raw Query
             //https://www.learnentityframeworkcore.com/raw-sql/execute-sql
-            int rowAffected = _context.Database.ExecuteSql($"Delete Imagenes Where id_producto = {id}");
+            int rowAffected = _context.Database.ExecuteSql($"Delete Imagenes Where id_imagen = {id} and id_producto = {idProducto} ");
             await Task.FromResult(1);
         }
     }

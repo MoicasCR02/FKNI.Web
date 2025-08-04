@@ -58,10 +58,7 @@ namespace FKNI.Infraestructure.Repository.Implementations
             //Relación de muchos a muchos solo con llave primaria compuesta
             var etiquetas = await getEtiquetas(selectedEtiquetas);
             entity.IdEtiqueta = etiquetas;
-            var imagenes = await getEtiquetas(selectedEtiquetas);
             entity.IdEtiqueta = etiquetas;
-            //entity.IdImagen = imagens;
-            await _context.Set<Productos>().AddAsync(entity);
             await _context.SaveChangesAsync();
             return entity.IdProducto;
         }
@@ -74,26 +71,48 @@ namespace FKNI.Infraestructure.Repository.Implementations
             return etiquetas;
 
         }
-        public async Task UpdateAsync(Productos entity, string[] selectedEtiquetas)
+
+        public async Task UpdateAsync(int id, Productos dto, string[] selectedEtiquetas)
         {
-            // Asegurar que EF esté rastreando el entity
-            _context.Entry(entity).State = EntityState.Modified;
+            var productoEnDb = await _context.Productos
+                .Include(p => p.IdEtiqueta)
+                .Include(p => p.IdImagen)
+                .FirstOrDefaultAsync(p => p.IdProducto == id);
 
-            // Mantener la relación con la categoría
-            var categoria = await _context.Set<Categorias>().FindAsync(entity.IdCategoria);
-            entity.IdCategoriaNavigation = categoria!;
+            if (productoEnDb == null) throw new Exception("Producto no encontrado");
 
-            // Obtener las nuevas etiquetas seleccionadas
+            // Actualizar propiedades simples
+            productoEnDb.NombreProducto = dto.NombreProducto;
+            productoEnDb.Descripcion = dto.Descripcion;
+            productoEnDb.Precio = dto.Precio;
+            productoEnDb.Stock = dto.Stock;
+            productoEnDb.IdCategoria = dto.IdCategoria;
+
+            // Actualizar categoría
+            var categoria = await _context.Categorias.FindAsync(dto.IdCategoria);
+            productoEnDb.IdCategoriaNavigation = categoria!;
+
+            // Sincronizar etiquetas
             var nuevasEtiquetas = await getEtiquetas(selectedEtiquetas);
-
-            // Cargar las etiquetas actuales si no vienen cargadas
-            _context.Entry(entity).Collection(e => e.IdEtiqueta).Load();
-
-            // Limpiar y asignar nuevas etiquetas
-            entity.IdEtiqueta.Clear();
+            productoEnDb.IdEtiqueta.Clear();
             foreach (var etiqueta in nuevasEtiquetas)
             {
-                entity.IdEtiqueta.Add(etiqueta);
+                productoEnDb.IdEtiqueta.Add(etiqueta);
+            }
+
+            // Sincronizar imágenes:
+            // - Eliminar las imágenes que no están en dto.IdImagen
+            var idsDto = dto.IdImagen.Select(i => i.IdImagen).ToList();
+            var imagenesEliminar = productoEnDb.IdImagen.Where(i => !idsDto.Contains(i.IdImagen)).ToList();
+            foreach (var imgEliminar in imagenesEliminar)
+            {
+                _context.Imagenes.Remove(imgEliminar);
+            }
+
+            // - Agregar imágenes nuevas (IdImagen == 0)
+            foreach (var imgNueva in dto.IdImagen.Where(i => i.IdImagen == 0))
+            {
+                productoEnDb.IdImagen.Add(imgNueva);
             }
 
             await _context.SaveChangesAsync();

@@ -41,5 +41,6 @@ namespace FKNI.Application.DTOs
         [NotMapped]
         public decimal Descuento { get; set; } = 0;
 
+        public List<int> ExistingImageIds { get; set; } = new List<int>(); // ← IDs de imágenes ya guardadas
     }
 }

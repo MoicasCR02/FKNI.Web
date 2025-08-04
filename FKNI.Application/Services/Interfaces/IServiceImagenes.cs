@@ -15,7 +15,8 @@ namespace FKNI.Application.Services.Interfaces
         Task<List<ImagenesDTO>> ObtenerPorProductoAsync(int idProducto);
         Task<int> AddAsync(ImagenesDTO dto);
         Task UpdateAsync(ImagenesDTO dto);
-        Task DeleteAsync(int id);
-        
+        Task DeleteAsync(int id, int idProducto);
+
+
     }
 }

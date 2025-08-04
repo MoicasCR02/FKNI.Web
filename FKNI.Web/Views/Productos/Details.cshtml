@@ -25,27 +25,36 @@
 
                 <dt class="col-sm-4">Valoración Promedio</dt>
                 <dd class="col-sm-8">
-                    @{
-                        var valoracion = Model.PromedioValoracion ?? 0;
-                        var fullStars = (int)Math.Floor((double)valoracion);
-                        var hasHalfStar = ((double)valoracion - fullStars) >= 0.5;
-                        var emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
-                    }
+                    <!-- Reseñas para valoracion -->
+                    @if (Model.Resenas != null && Model.Resenas.Any())
+                    {
+                        int totalValoraciones = (int)Model.Resenas.Sum(r => r.Valoracion);
+                        int cantidad = Model.Resenas.Count();
+                        decimal promedio = (decimal)totalValoraciones / cantidad;
 
-                    @for (int i = 0; i < fullStars; i++)
-                    {
-                        <i class="fas fa-star text-warning"></i>
-                    }
-                    @if (hasHalfStar)
-                    {
-                        <i class="fas fa-star-half-alt text-warning"></i>
-                    }
-                    @for (int i = 0; i < emptyStars; i++)
-                    {
-                        <i class="far fa-star text-warning"></i>
-                    }
+                        int estrellas = (int)Math.Floor(promedio);
+                        bool media = (promedio - estrellas) >= 0.5m;
+                        int vacias = 5 - estrellas - (media ? 1 : 0);
 
-                    <span class="ms-2">(@valoracion.ToString("0.0"))</span>
+                        <div class="mb-4">
+                            <p>
+                                @for (int i = 0; i < estrellas; i++)
+                                {
+                                    <i class="fas fa-star text-warning"></i>
+                                }
+                                @if (media)
+                                {
+                                    <i class="fas fa-star-half-alt text-warning"></i>
+                                }
+                                @for (int i = 0; i < vacias; i++)
+                                {
+                                    <i class="far fa-star text-warning"></i>
+                                }
+
+                                <span class="ms-2">(@promedio.ToString("0.0"))</span>
+                            </p>
+                        </div>
+                    }
                 </dd>
 
                 <dt class="col-sm-4">Categoría</dt>
@@ -127,7 +136,7 @@
             }
         </div>
     }
-    <a asp-controller="Resenas" asp-action="Create" asp-route-idProducto="@Model.IdProducto" asp-route-idUsuario="1"
+    <a asp-controller="Resenas" asp-action="Create" asp-route-idProducto="@Model.IdProducto" asp-route-idUsuario="6"
        class="btn btn-success">
         <i class="fas fa-plus-circle"></i> Agregar nueva reseña
     </a>
