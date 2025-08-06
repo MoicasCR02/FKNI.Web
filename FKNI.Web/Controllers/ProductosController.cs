@@ -19,7 +19,7 @@ namespace FKNI.Web.Controllers
         private readonly IServiceImagenes _serviceImagenes;
         private readonly IServiceEtiquetas _serviceEtiquetas;
         private readonly IServiceCategorias _serviceCategorias;
-        private readonly FKNIContext _context;
+        //private readonly FKNIContext _context;
 
         public ProductosController(IServiceProductos serviceProductos,IServiceEtiquetas serviceEtiquetas, IServiceCategorias serviceCategorias,IServiceImagenes serviceImagenes)
         {
@@ -30,6 +30,15 @@ namespace FKNI.Web.Controllers
 
         }
         [HttpGet]
+
+        public async Task<IActionResult> GetProductoByName(string filtro)
+        {
+
+            var collection = await _serviceProductos.FindByNameAsync(filtro);
+            return Json(collection);
+
+        }
+
         public async Task<IActionResult> Index()
         {
             var collection = await _serviceProductos.ListAsync();
@@ -65,8 +74,6 @@ namespace FKNI.Web.Controllers
             ViewBag.ListCategoria = await _serviceCategorias.ListAsync();
             var etiquetas = await _serviceEtiquetas.ListAsync();
             ViewBag.ListEtiquetas = new MultiSelectList(etiquetas, "IdEtiqueta", "NombreEtiqueta");
-            //var imagenes = await _serviceEtiquetas.ListAsync();
-            //ViewBag.ListImagenes = new MultiSelectList(imagenes, "IdImagen", "UrlImagen");
             return View();
         }
         [HttpPost]
@@ -139,7 +146,7 @@ namespace FKNI.Web.Controllers
         // POST: ProductosController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, ProductosDTO dto, List<IFormFile> ImageFiles, string[] selectedEtiquetas, string imagenesEliminadas)
+        public async Task<IActionResult> Edit(int id, ProductosDTO dto, List<IFormFile> ImageFiles, string[] selectedEtiquetas, List<int> imagenesEliminadas)
         {
             ModelState.Remove("imagenesEliminadas");
 
@@ -153,11 +160,9 @@ namespace FKNI.Web.Controllers
             }
 
             // 1. Eliminar imágenes si hay IDs
-            if (!string.IsNullOrWhiteSpace(imagenesEliminadas))
+            if (imagenesEliminadas != null && imagenesEliminadas.Any())
             {
-                var idsEliminados = imagenesEliminadas.Split(',').Select(int.Parse).ToList();
-
-                foreach (var imgId in idsEliminados)
+                foreach (var imgId in imagenesEliminadas)
                 {
                     await _serviceImagenes.DeleteAsync(imgId, id);
                 }

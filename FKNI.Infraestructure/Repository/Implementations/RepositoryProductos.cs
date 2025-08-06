@@ -17,6 +17,17 @@ namespace FKNI.Infraestructure.Repository.Implementations
         {
             _context = context;
         }
+
+        public async Task<ICollection<Productos>> FindByNameAsync(string nombre)
+        {
+            nombre = nombre.Replace(' ', '%');
+            nombre = "%" + nombre + "%";
+            FormattableString sql = $@"select * from Productos where nombre_producto like  {nombre}  ";
+
+            var collection = await _context.Productos.FromSql(sql).AsNoTracking().ToListAsync();
+            return collection;
+        }
+
         public async Task<Productos> FindByIdAsync(int id_producto)
         {
             //Obtener un Libro con su autor y las lista de categorías

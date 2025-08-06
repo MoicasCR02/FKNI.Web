@@ -48,5 +48,14 @@ namespace FKNI.Infraestructure.Repository.Implementations
         }
 
 
+        public async Task DeleteAsync(int id)
+        {
+            // Raw Query
+            //https://www.learnentityframeworkcore.com/raw-sql/execute-sql
+            int rowAffected = _context.Database.ExecuteSql($"Delete Promociones where id_promocion = {id}");
+            await Task.FromResult(1);
+        }
+
+
     }
 }

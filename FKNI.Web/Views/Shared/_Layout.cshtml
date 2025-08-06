@@ -55,7 +55,6 @@
                 </div>
             </div>
         </nav>
-    </header>
     <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()
@@ -70,6 +69,16 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+
+        <!--Ajax unobtrusive-->
+        <script src="">
+        </script>
+
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.10.4/dist/sweetalert2.all.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-ajaxunobtrusive/3.2.6/jquery.unobtrusive-ajax.js" integrity="sha512-f04GBpoqEZhbyjlRTuXeg8FIHDb+xfCJ0LVdqiN1fEl5B3jz3Z0SPe9IxDumOVdTeeXmKMcMJhb26VuGf1Laqw=="
+                crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+        <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

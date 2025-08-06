@@ -10,6 +10,7 @@ namespace FKNI.Application.Services.Interfaces
 {
     public interface IServiceProductos
     {
+        Task<ICollection<ProductosDTO>> FindByNameAsync(string nombre);
         Task<ICollection<ProductosDTO>> ListAsync();
         Task<ProductosDTO> FindByIdAsync(int id_producto);
         Task<int> AddAsync(ProductosDTO dto, string[] selectedEtiquetas);

@@ -44,5 +44,10 @@ namespace FKNI.Application.Services.Implementations
             // Return
             return await _repository.AddAsync(objectMapped);
         }
+
+        public async Task DeleteAsync(int id)
+        {
+            await _repository.DeleteAsync(id);
+        }
     }
 }
