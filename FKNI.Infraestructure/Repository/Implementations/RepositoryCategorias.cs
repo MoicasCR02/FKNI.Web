@@ -17,14 +17,25 @@ namespace FKNI.Infraestructure.Repository.Implementations
         {
             _context = context;
         }
-        public Task<Categorias> FindByIdAsync(int id_categoria)
+        public async Task<Categorias> FindByIdAsync(int id_categoria)
         {
-            throw new NotImplementedException();
+            var @object = await _context.Set<Categorias>().FindAsync(id_categoria);
+
+            return @object!;
         }
         public async Task<ICollection<Categorias>> ListAsync()
         {
             //Select * from Categorias
             var collection = await _context.Set<Categorias>().ToListAsync();
+            return collection;
+        }
+
+        public async Task<ICollection<Categorias>> SinPromo()
+        {
+            var collection = await _context.Categorias
+                .Where(c => !c.Promociones.Any()) // No tiene promociones
+                .ToListAsync();
+
             return collection;
         }
     }

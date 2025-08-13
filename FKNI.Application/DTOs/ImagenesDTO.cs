@@ -1,6 +1,7 @@
 ﻿using FKNI.Infraestructure.Models;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -16,6 +17,9 @@ namespace FKNI.Application.DTOs
         public int IdProducto { get; set; }
 
         public virtual Productos? IdProductoNavigation { get; set; }
+
+        [NotMapped]
+        public List<string> ImagenesBase64 { get; set; } = new List<string>();
     }
 }
     

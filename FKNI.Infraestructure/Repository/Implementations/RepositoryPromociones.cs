@@ -47,6 +47,30 @@ namespace FKNI.Infraestructure.Repository.Implementations
             return entity.IdPromocion;
         }
 
+        public async Task UpdateAsync(Promociones entity)
+        {
+            var existing = await _context.Promociones.FindAsync(entity.IdPromocion);
+            if (entity.IdProducto != null)
+            {
+                
+                if (existing != null)
+                {
+                    existing.FechaInicio = entity.FechaInicio;
+                    existing.FechaFin = entity.FechaFin;
+                    existing.Descuento = entity.Descuento;
+                    // No tocamos IdProducto ni FechaCreacion
+                    if (entity.IdProducto != null)
+                    {
+                        _context.Entry(existing).Reference(e => e.IdProductoNavigation).IsModified = false;
+                    }
+                    if (entity.IdCategoria != null)
+                    {
+                        _context.Entry(existing).Reference(e => e.IdCategoriaNavigation).IsModified = false;
+                    }             
+                    await _context.SaveChangesAsync();
+                }
+            }     
+        }
 
         public async Task DeleteAsync(int id)
         {

@@ -12,6 +12,8 @@ namespace FKNI.Infraestructure.Repository.Interfaces
         Task<ICollection<Promociones>> ListAsync();
         Task<Promociones> FindByIdAsync(int id_promocion);
         Task<int> AddAsync(Promociones entity);
+
+        Task UpdateAsync(Promociones entity);
         Task DeleteAsync(int id);
     }
 }

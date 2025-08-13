@@ -34,5 +34,15 @@ namespace FKNI.Application.Services.Implementations
             // Return lista
             return collection;
         }
+
+        public async Task<ICollection<CategoriasDTO>> SinPromo()
+        {
+            //Obtener datos del repositorio
+            var list = await _repository.SinPromo();
+            // Map List<Usurios> a ICollection<BodegaDTO>
+            var collection = _mapper.Map<ICollection<CategoriasDTO>>(list);
+            // Return lista
+            return collection;
+        }
     }
 }

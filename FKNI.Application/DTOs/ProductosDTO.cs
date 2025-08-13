@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace FKNI.Application.DTOs
@@ -30,6 +31,7 @@ namespace FKNI.Application.DTOs
 
         public virtual ICollection<DetallePedidoProducto> DetallePedidoProducto { get; set; } = new List<DetallePedidoProducto>();
 
+        [JsonIgnore]
         public virtual Categorias? IdCategoriaNavigation { get; set; }
 
         public virtual ICollection<Resenas> Resenas { get; set; } = new List<Resenas>();
@@ -42,5 +44,7 @@ namespace FKNI.Application.DTOs
         public decimal Descuento { get; set; } = 0;
 
         public List<int> ExistingImageIds { get; set; } = new List<int>(); // ← IDs de imágenes ya guardadas
+
+       
     }
 }

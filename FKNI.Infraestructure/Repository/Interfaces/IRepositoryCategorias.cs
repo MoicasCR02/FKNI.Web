@@ -11,5 +11,7 @@ namespace FKNI.Infraestructure.Repository.Interfaces
     {
         Task<ICollection<Categorias>> ListAsync();
         Task<Categorias> FindByIdAsync(int id_categoria);
+
+        Task<ICollection<Categorias>> SinPromo();
     }
 }

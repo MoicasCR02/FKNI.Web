@@ -1,0 +1,82 @@
+﻿@model FKNI.Application.DTOs.PromocionesDTO
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <!-- IdPromocion solo lectura -->
+            <div class="form-group">
+                <label asp-for="IdPromocion" class="control-label"></label>
+                <input asp-for="IdPromocion" class="form-control" readonly />
+            </div>
+
+            <!-- TipoPromocion solo lectura -->
+            <div class="form-group">
+                <label asp-for="TipoPromocion" class="control-label"></label>
+                <input asp-for="TipoPromocion" class="form-control" readonly />
+            </div>
+
+            <!-- Mostrar solo si es tipo Producto -->
+            @if (Model.TipoPromocion?.ToLower() == "producto")
+            {
+                <div class="form-group">
+                    <label asp-for="IdProducto" class="control-label"></label>
+                    <input asp-for="IdProducto" class="form-control" readonly />
+                </div>
+            }
+
+            <!-- Mostrar solo si es tipo Categoría -->
+            @if (Model.TipoPromocion?.ToLower() == "categoría" || Model.TipoPromocion?.ToLower() == "categoria")
+            {
+                <div class="form-group">
+                    <label asp-for="IdCategoria" class="control-label"></label>
+                    <input asp-for="IdCategoria" class="form-control" readonly />
+                </div>
+                <div class="form-group">
+                    <label>Nombre de la Categoría</label>
+                    <input value="@Model.NombreCategoria" class="form-control" readonly />
+                </div>
+            }
+
+            <!-- Campos editables -->
+            <div class="form-group">
+                <label asp-for="Descuento" class="control-label"></label>
+                <input asp-for="Descuento" class="form-control" />
+                <span asp-validation-for="Descuento" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="FechaInicio" class="control-label"></label>
+                <input asp-for="FechaInicio" type="date" class="form-control" />
+                <span asp-validation-for="FechaInicio" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="FechaFin" class="control-label"></label>
+                <input asp-for="FechaFin" type="date" class="form-control" />
+                <span asp-validation-for="FechaFin" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mt-3">
+                <input type="submit" value="Guardar" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Volver a la lista</a>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

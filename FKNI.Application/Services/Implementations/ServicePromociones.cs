@@ -45,6 +45,13 @@ namespace FKNI.Application.Services.Implementations
             return await _repository.AddAsync(objectMapped);
         }
 
+        public async Task UpdateAsync(int id, PromocionesDTO dto)
+        {
+            var entity = await _repository.FindByIdAsync(id);
+            // Este mapea el dto al objeto existente SIN cambiar el Id
+            _mapper.Map(dto, entity);
+            await _repository.UpdateAsync(entity);
+        }
         public async Task DeleteAsync(int id)
         {
             await _repository.DeleteAsync(id);

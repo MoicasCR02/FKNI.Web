@@ -20,12 +20,11 @@ namespace FKNI.Infraestructure.Repository.Implementations
 
         public async Task<ICollection<Productos>> FindByNameAsync(string nombre)
         {
-            nombre = nombre.Replace(' ', '%');
-            nombre = "%" + nombre + "%";
-            FormattableString sql = $@"select * from Productos where nombre_producto like  {nombre}  ";
-
-            var collection = await _context.Productos.FromSql(sql).AsNoTracking().ToListAsync();
+            var collection = await _context.Set<Productos>().Where(p => p.NombreProducto.Contains(nombre) && !_context.Set<Promociones>().Any(pr => pr.IdProducto == p.IdProducto))
+                .Include(p => p.IdImagen)
+                .ToListAsync();
             return collection;
+
         }
 
         public async Task<Productos> FindByIdAsync(int id_producto)

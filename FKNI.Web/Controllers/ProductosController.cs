@@ -9,6 +9,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.Identity.Client;
 using NuGet.Protocol.Core.Types;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 
 namespace FKNI.Web.Controllers
@@ -35,7 +37,11 @@ namespace FKNI.Web.Controllers
         {
 
             var collection = await _serviceProductos.FindByNameAsync(filtro);
-            return Json(collection);
+            return Json(collection, new JsonSerializerOptions
+            {
+                ReferenceHandler = ReferenceHandler.IgnoreCycles
+            });
+            //return Json(collection);
 
         }
 
@@ -44,6 +50,13 @@ namespace FKNI.Web.Controllers
             var collection = await _serviceProductos.ListAsync();
             return View(collection);
         }
+
+        public async Task<IActionResult> IndexAdmin()
+        {
+            var collection = await _serviceProductos.ListAsync();
+            return View(collection);
+        }
+
         public async Task<ActionResult> Details(int? id)
         {
             try

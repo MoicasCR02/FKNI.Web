@@ -26,24 +26,43 @@
               data-ajax-success="onSuccess"
               data-ajax-complete="onComplete">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="TipoPromocion" class="control-label"></label>
-                <input asp-for="TipoPromocion" class="form-control" />
+            <div class="mb-3">
+                <label asp-for="TipoPromocion" class="form-label">Tipo Promoción</label>
+                @Html.DropDownListFor(m => m.TipoPromocion,
+                new List<SelectListItem>
+                                {
+                                new SelectListItem { Text = "Seleccione un tipo de promoción", Value = "" },
+                                new SelectListItem { Text = "Producto", Value = "producto" },
+                                new SelectListItem { Text = "Categoría", Value = "categoria" }
+                                },
+                                new { @class = "form-select", required = "required" }
+                                )
+                <span class="text-danger" id="errorCategoria"></span>
                 <span asp-validation-for="TipoPromocion" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label for="NombreProductoInput" class="control-label">Buscar producto</label>
-                <input type="text" id="NombreProductoInput" class="form-control form-control-sm" placeholder="Escriba el nombre del producto" />
-                <!-- Campo oculto que se enviará con el formulario -->
-                <input type="hidden" asp-for="IdProducto" id="IdProducto" />
-                <span asp-validation-for="IdProducto" class="text-danger"></span>
+
+            <div class="form-group" id="selectorProducto" style="display:none;">
+                <label asp-for="BuscarProducto" class="control-label" ></label>
+                <input asp-for="BuscarProducto" class="form-control form-control-sm" />
+                <span asp-validation-for="BuscarProducto" class="text-danger"></span>
+                @* <span id="NombreProducto" class="control-label fw-bold">-</span> *@
                 <label id="NombreProducto" class="control-label fw-bold">-</label>
+                <img id="imgProducto"
+                     class="imagen-uniforme"
+                     alt="Imagen del producto" />
             </div>
-            <div class="form-group">
-                <label asp-for="IdCategoria" class="control-label"></label>
-                <input asp-for="IdCategoria" class="form-control" />
+
+            <div class="mb-3" id="selectorCategoria" style="display:none;">
+                <label asp-for="IdCategoria" class="form-label">Categoría</label>
+                @Html.DropDownListFor(m => m.IdCategoria,
+                                new SelectList(ViewBag.ListCategoria, "IdCategoria", "NombreCategoria"),
+                                "Seleccione una categoría",
+                                new { @class = "form-select", required = "required" })
+                <span class="text-danger" id="errorCategoria"></span>
                 <span asp-validation-for="IdCategoria" class="text-danger"></span>
+
             </div>
+
             <div class="form-group">
                 <label asp-for="Descuento" class="control-label"></label>
                 <input asp-for="Descuento" class="form-control" />
@@ -51,12 +70,12 @@
             </div>
             <div class="form-group">
                 <label asp-for="FechaInicio" class="control-label"></label>
-                <input asp-for="FechaInicio" class="form-control" />
+               <input asp-for="FechaInicio" class="form-control" type="date" value="@ViewBag.FechaInicio" />
                 <span asp-validation-for="FechaInicio" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="FechaFin" class="control-label"></label>
-                <input asp-for="FechaFin" class="form-control" />
+                <input asp-for="FechaFin" class="form-control" type="date" value="@ViewBag.FechaFin" />
                 <span asp-validation-for="FechaFin" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -72,49 +91,90 @@
 
 @section Scripts {
     <script>
+
+         // Control de selector
+            document.getElementById("TipoPromocion").addEventListener("change", function () {
+            const value = this.value;
+
+            if (value === "producto") {
+                document.getElementById("selectorProducto").style.display = "block";
+                document.getElementById("selectorCategoria").style.display = "none";
+            }
+            else if (value === "categoria") {
+                document.getElementById("selectorProducto").style.display = "none";
+                document.getElementById("selectorCategoria").style.display = "block";
+            }
+            else {
+                // Si no se ha elegido nada, oculta ambos
+                document.getElementById("selectorProducto").style.display = "none";
+                document.getElementById("selectorCategoria").style.display = "none";
+            }
+        });
+
         /**************************/
         // Busca el cliente por nombre+apellido1+apellido2 //
         /**************************/
 
-        $("#IdProducto").autocomplete({
+        $("#BuscarProducto").autocomplete({
             source: function (request, response) {
-                var IdProducto = $("#IdProducto").val();
-                console.log(IdProducto);
                 $.ajax({
                     type: "GET",
                     url: '@Url.Action("GetProductoByName", "Productos")',
                     dataType: "json",
-                    data: { filtro: IdProducto },
+                    data: { filtro: request.term },
                     success: function (data) {
+
                         response($.map(data, function (item) {
-                            console.log(item);
-                            return { label: item.nombreproducto + " ", value: item.idCliente };
+                            const imagenes = item.IdImagen; // Convierte el JSON a un objeto JavaScript
+                            // Acceder al primer objeto del array
+                            const primerObjeto = imagenes[0];
+                            
+                            // Acceder a la edad del segundo objeto
+                            console.log("Item recibido:", item);
+                            if (Array.isArray(imagenes) && imagenes.length > 0 && imagenes[0].UrlImagen) {
+                                mostrar = primerObjeto.UrlImagen;
+                            } else {
+                                mostrar = null; // o mensaje de error
+                            }
+                            return {
+                                label: item.NombreProducto + "completado", // texto que se muestra en la lista
+                                value: item.IdProducto,     // valor que se asigna al input
+                                nombre: item.NombreProducto, // propiedad extra para mostrar el nombre en el label
+                                imagen: mostrar
+                            };
                         }));
                     },
                     error: function (xhr, status, error) {
-                        console.log(error)
-                        alert("Error: " + error + ", No Error: " + xhr.status);
-                    },
+                        console.error(error);
+                       console.log(mostrar);
+                    }
                 });
             },
             select: function (event, ui) {
-
-                $("#IdProducto").val(ui.item.value);
-                $("#NombreProducto").html(ui.item.label)
-
-                return false;
-            }
+                // Asignar el IdProducto (valor) al input
+                $("#BuscarProducto").val(ui.item.value);
+                // Mostrar el nombre del producto en la etiqueta
+                $("#NombreProducto").text(ui.item.label);
+                console.log(ui.item);
+                if (ui.item.imagen) {
+                $("#imgProducto").attr("src", "data:image/png;base64," + ui.item.imagen);
+                } else {
+                    alert("La imagen no existe, no se puede seleccionar");
+                    $("#imgProducto").attr("src", ""); // limpiar
+                }
+                    }
         });
 
 
         /**************************/
         // Limpiar cajas de texto cuando tenga el foco
         /**************************/
-        $("#IdProducto").focus(function () {
+        $("#BuscarProducto").focus(function () {
             // Limpia la caja de texto
-            $("#IdProducto").val("");
+            $("#BuscarProducto").val("");
             $("#NombreProducto").html("*")
         });
+
         //Controles de AJAX
         function onBegin() {
             console.log("onBegin")
